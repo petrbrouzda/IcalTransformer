@@ -14,7 +14,6 @@ services:
 	- App\Services\Downloader
 	- App\Services\Config
 	- App\Services\SmartCache	
-	- App\Services\ChmiParser
 	router: App\Router\RouterFactory::createRouter
 
 http:
