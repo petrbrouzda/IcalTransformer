@@ -60,7 +60,7 @@ class IcalEvent
     private $dtend;
     private $dtstart;
 
-    private function __toString() {
+    public function __toString() {
         return "IcalEvent from:[{$this->dtstart}] to:[{$this->dtend}] summary:[{$this->summary}]";
     }
 
