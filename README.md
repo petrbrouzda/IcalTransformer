@@ -27,6 +27,7 @@ Vrátí události od "teď" po několik dalších dní udaných parametrem range
 * rangeDays=0 .... vrátí od teď do dnešní půlnoci
 * rangeDays=1 .... vrátí od teď do zítřejší půlnoci
 * rangeDays=2 .... vrátí od teď do pozítřejší půlnoci
+
 a tak dále.
 
 ## mode=daterange
