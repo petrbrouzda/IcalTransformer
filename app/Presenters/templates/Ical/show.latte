@@ -1,0 +1,25 @@
+
+Filtruji od: {$dateFrom}
+<br>
+do: {$dateTo}
+<p>
+<table border=1 cellpadding=3>
+<tr>
+<td>from</td>
+<td>to</td>
+<td>summary</td>
+<td>desc</td>
+</tr>
+{foreach $events as $event }
+<tr>
+<td>{$event->getStart()}</td>
+<td>{$event->getEnd()}</td>
+<td>{$event->getSummary( false )}</td>
+<td>{$event->getDescription( false )}</td>
+</tr>
+{/foreach}
+</table>
+
+
+
+

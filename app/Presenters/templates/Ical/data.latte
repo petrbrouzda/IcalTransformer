@@ -1,0 +1,37 @@
+{if $error}
+    <h1>Chyba</h1>
+    {$error}
+{else}
+
+Filtruji od: {$dateFrom}
+<br>
+do: {$dateTo}
+<p>
+{if count($urls)>1}
+    z kalendářů: <ul>
+    {foreach $urls as $url}
+        <li>{$url}
+    {/foreach}
+    </ul>
+{else}
+    z kalendáře {$urls[0]}
+{/if}
+<p>
+<table border="1" cellpadding="3">
+<tr>
+<td>from</td>
+<td>to</td>
+<td>summary</td>
+<td>description</td>
+</tr>
+{foreach $events as $event }
+<tr>
+<td>{$event->getStart()}</td>
+<td>{$event->getEnd()}</td>
+<td>{$event->getSummary( $htmlAllowed )}</td>
+<td>{$event->getDescription( $htmlAllowed )}</td>
+</tr>
+{/foreach}
+</table>
+
+{/if}

@@ -1,0 +1,94 @@
+
+<h1>Demo stránka pro IcalTransformer</h1>
+
+<h2>Vrácení dat od "teď" pro několik dní</h2>
+<form action="ical/data" method="get">
+    Vrací události od "teď" po několik následujících celých dní.
+    <p>
+    URL Google ICS kalendáře: <input type="text" size="80" name="url" required>
+    <br><i>Je možno vložit více URL oddělených znakem pípa "|", pak se události z kalendářů sečtou za sebe (ale nemažou se duplicity).</i>
+    <br><i>Jak získat URL? <a href="#url">Je popsáno níže!</a></i>
+    <p>
+
+    Vrátit události od teď do: 
+    <select name="rangeDays">
+        <option value="0">dnešní půlnoci (jen dnes)</option>
+        <option value="1" selected>zítřejší půlnoci (zbytek dneška a celý zítřek)</option>
+        <option value="2">pozítřejší půlnoci (zbytek dneška a 2 dny)</option>
+        <option value="3">zbytek dneška a 3 dny</option>
+    </select>
+
+    <p>
+    Formát výstupu: 
+    <select name="format"  size="2">
+        <option value="html" selected>HTML - pro testy</option>
+        <option value="json">JSON - pro aplikace</option>
+    </select>
+
+    <p>
+    Úprava dat: 
+    <select name="htmlAllowed"  size="2">
+        <option value="no" selected>Odstranit HTML tagy z textu</option>
+        <option value="yes">Nechat HTML</option>
+    </select>
+
+    <p>
+    <input type="hidden" name="mode" value="todayplus">
+    <input type="submit" name="send" value="Odeslat">
+</form>
+
+<hr>
+
+<h2>Vrácení dat pro fixní rozsah datumů</h2>
+<form action="ical/data" method="get">
+    Vrací obsah celých dní od data do data.
+    <p>
+    URL Google ICS kalendáře: <input type="text" size="80" name="url" required>
+    <br><i>Je možno vložit více URL oddělených znakem pípa "|", pak se události z kalendářů sečtou za sebe (ale nemažou se duplicity).</i>
+    <br><i>Jak získat URL? <a href="#url">Je popsáno níže!</a></i>
+    <p>
+
+    Datum od: <input type="date" name="from" value="{$dateFrom|date:'Y-m-d'}" required> (včetně)
+    <br>
+    Datum do: <input type="date" name="to" value="{$dateTo|date:'Y-m-d'}" required> (z tohoto data již nebudou události zahrnuty)
+        <p>
+    Formát výstupu: 
+    <select name="format"  size="2">
+        <option value="html" selected>HTML - pro testy</option>
+        <option value="json">JSON - pro aplikace</option>
+    </select>
+
+    <p>
+    Úprava dat: 
+    <select name="htmlAllowed"  size="2">
+        <option value="no" selected>Odstranit HTML tagy z textu</option>
+        <option value="yes">Nechat HTML</option>
+    </select>
+
+    <p>
+    <input type="hidden" name="mode" value="daterange">
+    <input type="submit" name="send" value="Odeslat">
+</form>
+
+<hr>
+
+<h2><a name="url">Jak získat adresu svého kalendáře</a></h2>
+
+Otevřete si svůj Google kalendář.
+<br>
+Na levé straně pod měsíčním kalendářem a hledacím polem je seznam zobrazených kalendářů. Klikněte na trojtečku u kalendáře:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/c1.png">
+<p>
+Zvolte "Nastavení a sdílení":
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/c2.png">
+<p>
+Najděte položku "Tajná adresa ve formátu iCal" a klikněte na ikonu kopírování u ní.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/c3.png">
+<br>
+Pokud tam tuto možnost nemáte (je tam jen "veřejná adresa"), nejste přímým vlastníkem kalendáře - typicky u firemních/školních účtů.
+
+
+
