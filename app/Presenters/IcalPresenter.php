@@ -124,11 +124,11 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
             $this->template->htmlAllowed = ( $htmlAllowed!=="no");
 
             if( $mode==="daterange") {
-                Logger::log( 'app', Logger::DEBUG,  "+++ Req: daterange f={$format} [{$from}] - [{$to}]" );
+                Logger::log( 'app', Logger::DEBUG,  "+++ Req: daterange f={$format} [{$from}] - [{$to}], [{$this->getHttpRequest()->getRemoteAddress()}]" );
                 $this->template->dateFrom = Nette\Utils\DateTime::from($from);
                 $this->template->dateTo = Nette\Utils\DateTime::from($to);
             } else if( $mode==="todayplus" ) {
-                Logger::log( 'app', Logger::DEBUG,  "+++ Req: todayplus f={$format} range={$rangeDays}" );
+                Logger::log( 'app', Logger::DEBUG,  "+++ Req: todayplus f={$format} range={$rangeDays}, [{$this->getHttpRequest()->getRemoteAddress()}]" );
                 $this->template->dateFrom = new Nette\Utils\DateTime();
                 // zarovname na zacatek hodiny, aby se dalo kesovat
                 $this->template->dateFrom->setTime( intval($this->template->dateFrom->format('G')), 0, 0, 0 );
@@ -137,7 +137,7 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
                 $this->template->dateTo = $this->template->dateFrom->modifyClone( $param );
                 $this->template->dateTo->setTime( 0, 0, 0, 0 );
             } else {
-                Logger::log( 'app', Logger::INFO,  "+++ Req: unknown mode [{$mode}]" );
+                Logger::log( 'app', Logger::INFO,  "+++ Req: unknown mode [{$mode}], [{$this->getHttpRequest()->getRemoteAddress()}]" );
                 throw new \Exception( "unknown mode [{$mode}]");
             }
 
@@ -214,7 +214,7 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
             // normalni scenar pro sendJson()
             throw $e;
         } catch (\Exception $e) {
-            Logger::log( 'app', Logger::ERROR,  "ERR: " . get_class($e) . ": " . $e->getMessage() );
+            Logger::log( 'app', Logger::ERROR,  "ERR: " . get_class($e) . ": " . $e->getMessage() . " [{$this->getHttpRequest()->getRemoteAddress()}]" );
 
             if( $format==="json" )  {
                 $httpResponse = $this->getHttpResponse();
