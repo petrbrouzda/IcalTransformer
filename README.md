@@ -1,7 +1,7 @@
 # IcalTransformer
 
 Načte ICAL verzi Google kalendáře a vrátí události v zadaném časovém okně ve formě jednoduchého JSON dokumentu.
-Vyzkoušejte si na adrese https://lovecka.info/IcalTransformer/
+Vyzkoušejte si přes **přehledný testovací formulář** na adrese https://lovecka.info/IcalTransformer/
 
 Je určeno např. pro zobrazení kalendáře na displejích meteostanic se slabým procesorem.
 
@@ -14,28 +14,36 @@ I pokud budete zasílat požadavky opakovaně častěji, k výpočtům dojde jen
 
 Stránka pro podání JSON dat sedí na adrese https://vas-server/IcalTransformer/ical/data
 (možno vyzkoušet na https://lovecka.info/IcalTransformer/ical/data )
-a bere následující parametry:
+a bere následující GET parametry:
 
-*  url - URL ICAL kalendáře; může být více adres oddělených znakem "pípa", tedy |. Musí bát URL-encoded!
-*  format - "json" nebo "html"
-*  htmlAllowed - "no" znamená, že v popisech události se ořežou HTML tagy; "yes" je tam nechá
-*  mode - určení, které události se mají zobrazit. Buď "todayplus" nebo "daterange".
+*  **url** - URL ICAL kalendáře; může být více adres oddělených znakem "pípa", tedy |. Musí bát URL-encoded!
+*  **format** - "json" nebo "html"
+*  **htmlAllowed** - "no" znamená, že v popisech události se ořežou HTML tagy; "yes" je tam nechá
+*  **mode** - určení, které události se mají zobrazit. Buď "todayplus" nebo "daterange".
 
 ## mode=todayplus
 
-Vrátí události od "teď" po několik dalších dní udaných parametrem rangeDays.
+Vrátí události od "teď" po několik dalších dní udaných parametrem **rangeDays** .
 * rangeDays=0 .... vrátí od teď do dnešní půlnoci
 * rangeDays=1 .... vrátí od teď do zítřejší půlnoci
 * rangeDays=2 .... vrátí od teď do pozítřejší půlnoci
 
-a tak dále.
+a tak dále (hodnota není omezena).
 
 ## mode=daterange
 
-Očekává další dva parametry:
-* from - datum, od kterého má vracet události, YYYY-MM-DD. Události v tomto dni budou zahrnuty do výstupu.
-* to - datum, do kterého má vracet události, YYYY-MM-DD. Události v tomto dni už nebudou zahrnuty do výstupu.
+Očekává dva parametry:
+* **from** - datum, od kterého má vracet události, YYYY-MM-DD. Události v tomto dni budou zahrnuty do výstupu.
+* **to** - datum, do kterého má vracet události, YYYY-MM-DD. Události v tomto dni už nebudou zahrnuty do výstupu.
 
+
+## Ukázka volání
+
+Celé URL může vypadat třeba takto (privátní části odkazu jsou nahrazeny, takže URL není funkční):
+
+```
+https://lovecka.info/IcalTransformer/ical/data?url=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2FXXX.XXXXXX%2540gmail.com%2Fprivate-6ZZZZZZZZZZZZZ%2Fbasic.ics&rangeDays=2&format=json&htmlAllowed=no&mode=todayplus
+```
 
 ---
 # Popis instalace
