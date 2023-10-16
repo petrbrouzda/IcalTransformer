@@ -45,6 +45,48 @@ Celé URL může vypadat třeba takto (privátní části odkazu jsou nahrazeny,
 https://lovecka.info/IcalTransformer/ical/data?url=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2FXXX.XXXXXX%2540gmail.com%2Fprivate-6ZZZZZZZZZZZZZ%2Fbasic.ics&rangeDays=2&format=json&htmlAllowed=no&mode=todayplus
 ```
 
+## Struktura vráceného JSON
+
+JSON je jednoduchý. Ke každé události obsahuje předmět (summary), text (description) a místo (location). A dále je zde uveden čas začátku a konce - pokaždé třikrát. Jednou v ISO formátu, podruhé jako unixový epoch time a naposledy v "lidsky čitelném" formátu, kdy u dneška není datum uveden, u zítřka je napsáno "zítra" a u dalších dní je formát třeba "čt 19.10. 15:45".
+
+```
+[
+        {      
+                "description": "",
+                "location": "",
+                "summary": "Softball",
+                "time_start_i": "2023-10-17T17:00:00+02:00",
+                "time_start_e": 1697554800,
+                "time_start_t": "17:00",
+                "time_end_i": "2023-10-17T19:00:00+02:00",
+                "time_end_e": 1697562000,
+                "time_end_t": "19:00"
+        },
+        {
+                "description": "Pravidelné zkoušky se konají ve středu od 17:15 do 18:45 ve sborové zkušebně.",
+                "location": "",
+                "summary": "sbor",
+                "time_start_i": "2023-10-18T17:15:00+02:00",
+                "time_start_e": 1697642100,
+                "time_start_t": "zítra 17:15",
+                "time_end_i": "2023-10-18T18:45:00+02:00",
+                "time_end_e": 1697647500,
+                "time_end_t": "zítra 18:45"
+        },
+        {
+                "description": "",
+                "location": "VOŠ mezinárodního obchodu a Obchodní akademie Jablonec nad Nisou,Horní nám. 1200/15, 466 01 Jablonec nad Nisou, Česko",
+                "summary": "Aj",
+                "time_start_i": "2023-10-19T15:45:00+02:00",
+                "time_start_e": 1697723100,
+                "time_start_t": "čt 19.10. 15:45",
+                "time_end_i": "2023-10-19T17:15:00+02:00",
+                "time_end_e": 1697728500,
+                "time_end_t": "čt 19.10. 17:15"
+        }
+]
+```
+
 ---
 # Jak získat URL na ICAL soubor Google Kalendáře?
 
