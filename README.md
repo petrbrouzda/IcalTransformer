@@ -46,6 +46,26 @@ https://lovecka.info/IcalTransformer/ical/data?url=https%3A%2F%2Fcalendar.google
 ```
 
 ---
+# Jak získat URL na ICAL soubor Google Kalendáře?
+
+Otevřete si svůj Google kalendář.
+
+Na levé straně pod měsíčním kalendářem a hledacím polem je seznam zobrazených kalendářů. Klikněte na trojtečku u kalendáře:
+
+![](www/img/c1.png)
+
+Zvolte "Nastavení a sdílení":
+
+![](www/img/c2.png)
+
+Najděte položku "Tajná adresa ve formátu iCal" a klikněte na ikonu kopírování u ní.
+
+![](www/img/c3.png)
+
+Pokud tam tuto možnost nemáte (je tam jen "veřejná adresa"), nejste přímým vlastníkem kalendáře - typicky u firemních/školních účtů.
+
+
+---
 # Popis instalace
 
 Potřebujete:
