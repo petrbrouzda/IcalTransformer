@@ -3,6 +3,12 @@
 Načte ICAL verzi Google kalendáře a vrátí události v zadaném časovém okně ve formě jednoduchého JSON dokumentu.
 Vyzkoušejte si na adrese https://lovecka.info/IcalTransformer/
 
+Je určeno např. pro zobrazení kalendáře na displejích meteostanic se slabým procesorem.
+
+Stahované ICAL kalendáře si kešuje - nestahuje je častěji než jednou za hodinu, i když přijde požadavek častěji. 
+Stejně tak si kešuje i další zpracování dokumentu. 
+I pokud budete zasílat požadavky opakovaně častěji, k výpočtům dojde jen jednou za hodinu.
+
 ---
 # Volání a parametry
 
