@@ -136,6 +136,8 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
                 $param = '+' . (intval($rangeDays)+1) . ' day';
                 $this->template->dateTo = $this->template->dateFrom->modifyClone( $param );
                 $this->template->dateTo->setTime( 0, 0, 0, 0 );
+
+                Logger::log( 'app', Logger::DEBUG,  "{$this->template->dateFrom} - {$this->template->dateTo}" );
             } else {
                 Logger::log( 'app', Logger::INFO,  "+++ Req: unknown mode [{$mode}], [{$this->getHttpRequest()->getRemoteAddress()}]" );
                 throw new \Exception( "unknown mode [{$mode}]");
@@ -189,10 +191,39 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
                     $rc['summary'] = $event->getSummary( $this->template->htmlAllowed );
                     $rc['time_start_i'] = $event->getStart()->format('c');
                     $rc['time_start_e'] = $event->getStart()->getTimestamp();
-                    $rc['time_start_t'] = $this->hezkeDatum( $event->getStart() );
+
+                    if( $mode==="todayplus" ) {
+                        // pokud se ptáme ode dneška a začátek je v minulosti, speciální formátování
+                        $dnesek = new Nette\Utils\DateTime();
+                        $dnesek->setTime( 0, 0, 0, 0 );
+                        if( $dnesek->getTimestamp() > $event->getStart()->getTimestamp() ) {
+                            $interval = $event->getStart()->diff( new Nette\Utils\DateTime() );
+                            // zakladni vypocet, o presnost nejde
+                            $days = $interval->y * 365 + $interval->m * 31 + $interval->d + 1;
+                            $rc['time_start_t'] = "({$days}. den)";
+                        } else {
+                            $rc['time_start_t'] = $this->hezkeDatum( $event->getStart() );
+                        }
+                    } else {
+                        $rc['time_start_t'] = $this->hezkeDatum( $event->getStart() );
+                    }
+
                     $rc['time_end_i'] = $event->getEnd()->format('c');
                     $rc['time_end_e'] = $event->getEnd()->getTimestamp();
                     $rc['time_end_t'] = $this->hezkeDatum( $event->getEnd() );
+
+                    // speciální formátování pro jednodenní celodenní události - nebude fungovat pro dny se změnou času
+                    if( $rc['time_end_e']-$rc['time_start_e']==86400) {
+                        if( $rc['time_start_t']==='00:00' ) {
+                            $rc['time_start_t']='dnes';
+                            $rc['time_end_t']='dnes';
+                        }
+                        if( $rc['time_start_t']==='zítra 00:00' ) {
+                            $rc['time_start_t']='zítra';
+                            $rc['time_end_t']='zítra';
+                        }
+                    }
+
                     $result[] = $rc;
                 }
             }
