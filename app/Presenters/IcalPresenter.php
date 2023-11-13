@@ -97,10 +97,13 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
 
 
     private $dny = [ ' ', 'po', 'út', 'st', 'čt', 'pá', 'so', 'ne' ];
+    private $dnyDlouhe = [ ' ', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota', 'neděle' ];
 
     private function hezkeDatum( $date )
     {
         $today = new Nette\Utils\DateTime();
+        $today->setTime( 0, 0, 0, 0 );
+
         $dateT = $date->format('Y-m-d');
 
         if( strcmp( $today->format('Y-m-d') , $dateT)==0 ) {
@@ -111,7 +114,28 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
             return "zítra " . $date->format('H:i');
         }
 
-        return $this->dny[$date->format('N')] . ' ' . $date->format( 'j.n. H:i' );
+        $datum = '';
+
+        if( $today->getTimestamp() >= $date->getTimestamp() ) {
+            // v minulosti
+            $datum = $this->dny[$date->format('N')] . ' ' . $date->format( 'j.n.' );
+        } else {
+            // v budoucnosti
+            $interval = $today->diff( $date );
+            $days = $interval->y * 365 + $interval->m * 31 + $interval->d + 1;
+            if( $days < 6 ) {
+                $datum = $this->dnyDlouhe[$date->format('N')];
+            } else {
+                $datum = $this->dny[$date->format('N')] . ' ' . $date->format( 'j.n.' );
+            }
+        }
+        $cas = $date->format('H:i');
+        if( $cas==='00:00' ) {
+            // zacina o pulnoci, nebudeme cas udavat
+        } else {
+            $datum = $datum . ' ' . $cas;
+        }
+        return $datum;
     }
 
 
