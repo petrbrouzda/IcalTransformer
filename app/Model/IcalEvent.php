@@ -156,6 +156,7 @@ class IcalEvent
     RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20231101T225959Z;BYDAY=WE
     RRULE:FREQ=WEEKLY;WKST=MO;COUNT=14;BYDAY=TU,TH
     RRULE:FREQ=WEEKLY;UNTIL=20110626T130000Z;INTERVAL=2;BYDAY=WE
+    RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20231224;INTERVAL=4;BYDAY=MO
     
     RRULE:FREQ=MONTHLY;COUNT=3;BYMONTHDAY=18
     RRULE:FREQ=MONTHLY;BYDAY=3MO
@@ -179,9 +180,16 @@ class IcalEvent
 
         $until = KeyValueAttribute::findValue( $this->rrule, 'UNTIL' );
         if( $until !== '' ) {
-            // 20231101T225959Z
-            $untilDate = DateTime::createFromFormat('Ymd\THis\Z', $until, 'Z'  );
-            //D/ Logger::log( 'app', Logger::TRACE, " isrd: kontroluji until {$untilDate}" );    
+            //D/ Logger::log( 'app', Logger::TRACE, " isrd: kontroluji until '{$until}'" );    
+
+            // 20231101T225959Z nebo 20231224
+            if( strlen($until)==8 ) {
+                $untilDate = DateTime::createFromFormat('Ymd', $until, 'Z'  );
+            } else {
+                $untilDate = DateTime::createFromFormat('Ymd\THis\Z', $until, 'Z'  );
+            }
+            
+            //D/ Logger::log( 'app', Logger::TRACE, " isrd: until {$untilDate}" );    
             if( $untilDate < $from  ) {
                 //D/ Logger::log( 'app', Logger::TRACE, " isrd: v minulosti" );    
                 return false;
