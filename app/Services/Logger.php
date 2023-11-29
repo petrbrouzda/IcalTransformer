@@ -37,10 +37,11 @@ class Logger
     private $fileBase;
 
     /**
-     * self::NONE = nic
      * self::ERROR = jen chyby
      * self::INFO = vse bez debugu
-     * self::DEBUG = vse
+     * self::DEBUG = debug
+     * self::TRACE = vse
+     * self::NONE = nic
      */
     const LOG_LEVEL = self::DEBUG;
 

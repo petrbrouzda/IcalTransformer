@@ -439,6 +439,7 @@ class IcalEvent
 
     /*
     RRULE:FREQ=MONTHLY;COUNT=3;BYMONTHDAY=18
+    RRULE:FREQ=MONTHLY;WKST=MO;BYMONTHDAY=-1
     */
     private function fillEventsInDateRangesMonthlyBymonthday( $from, $to, &$events, $untilDate, $maxCount, $delkaSec, $monthDay, $interval ) {
         $date = $this->dtstart->modifyClone();
@@ -475,11 +476,38 @@ class IcalEvent
                     $newMonth = $newMonth - 12;
                     $newYear++;
                 }
-                $date->setDate( $newYear, $newMonth, $monthDay);
-                if( intval($date->format('j')) == $monthDay ) {
+
+                // kladny den = den v mesici
+                if( $monthDay>0 ) {
+                    $date->setDate( $newYear, $newMonth, $monthDay);
+                    if( intval($date->format('j')) == $monthDay ) {
+                        break;
+                    }
+                    // v tomto mesici tento den neni, musime jit dal
+                } else {
+                    // zaporny den = pocitano od konce mesice zpetne
+                    // najdeme posledni den mesice
+                    $den = 31;
+                    while( $den>27 ) {
+                        $date->setDate( $newYear, $newMonth, $den);
+                        if( intval($date->format('j')) == $den ) {
+                            // mesic ma $den dni
+                            $den = $den + $monthDay + 1;
+                            $date->setDate( $newYear, $newMonth, $den);
+                            //D/ Logger::log( 'app', Logger::TRACE, "byday={$monthDay} datum={$newYear}/{$newMonth}/{$den}" );    
+                            break;
+                        }
+                        $den--;
+                    }
+                    // vyskocit z cyklu generovani
                     break;
                 }
-                // v tomto mesici tento den neni, musime jit dal
+
+                // kontrola na koncove datum!
+                if( $date > $to ) {
+                    Logger::log( 'app', Logger::DEBUG, "zacykleno v generovani data, vyskakuji" );   
+                    return;
+                }
             }
             $date->setTime( intval($this->dtstart->format('G')), intval($this->dtstart->format('i')), 0, 0 );
 
