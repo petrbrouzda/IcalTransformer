@@ -144,6 +144,7 @@ class IcalParser
     DTEND ekvivalentne
     EXDATE;TZID=Europe/Prague:20231018T100000
     EXDATE;TZID=Europe/Prague:20231004T100000
+    RECURRENCE-ID;TZID=Europe/Prague:20231210T120000   
 
     class 1B 
     RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20231101T225959Z;BYDAY=WE
@@ -154,6 +155,7 @@ class IcalParser
     DESCRIPTION:Chcete-li\, aby se vám zobrazovaly ... https://g.co/calendar\n\nTato událost byla vytvořena 
     LOCATION:test místo
     SUMMARY:Vstupenka na stezky KPN\, Jednodenní jízdenka - normální\, 23.09.20 23 (DROP/TID/0E813F8FA3)
+    UID:6147n7tlnj2scsk78hb2hp2mk4@google.com
     */
 
     private $dateFrom;
@@ -198,6 +200,13 @@ class IcalParser
             if( $this->reader->command==="LOCATION" ) {
                 $event->setLocation( $this->parseText( $line ) );
             }
+            if( $this->reader->command==="UID" ) {
+                $event->setUid( $this->parseText( $line ) );
+            }
+            if( $this->reader->command==="RECURRENCE-ID" ) {
+                $this->parse1a( $line );
+                $event->setRecurrenceId( $this->commandAttributes, $this->parameter );
+            }
         }
 
         // overit, ze je v danem case, zapsat do vystupniho pole
@@ -215,7 +224,8 @@ class IcalParser
                 // jednorazove udalosti jsou trivialni
                 if( $event->isInDateRange( $this->dateFrom, $this->dateToExclusive ) ) {
                     //D/ Logger::log( 'app', Logger::TRACE, "udalost in range: {$event->getSummary()}" );    
-                    $this->events[] = $event;
+                    // nezapisuju primo do pole, aby se vyhodnotilo pripadne prepsani drivejsi udalosti
+                    $event->fillEventInArray( $this->events, $event );
                 } else {
                     //D/ Logger::log( 'app', Logger::TRACE, "udalost mimo range: {$event->getSummary()}" );    
                 }

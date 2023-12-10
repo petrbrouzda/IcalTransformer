@@ -60,17 +60,24 @@ class IcalEvent
     private $dtend;
     private $dtstart;
 
+    /** je potreba pro nahrazovani vyjimek pri recurrenci */
+    private $uid;
+
+    /** timestamp udalosti, kterou nahrazuje */
+    private $recurrenceId;
+
     public function __toString() {
-        return "IcalEvent from:[{$this->dtstart}] to:[{$this->dtend}] summary:[{$this->summary}]";
+        return "IcalEvent from:[{$this->dtstart}] to:[{$this->dtend}] summary:[{$this->summary}] [{$this->uid}]";
     }
 
-    private function init( $start, $end, $summary, $description, $location )
+    private function init( $start, $end, $summary, $description, $location, $uid )
     {
         $this->dtstart = $start;
         $this->dtend = $end;
         $this->summary = $summary;
         $this->description = $description;
         $this->location = $location;
+        $this->uid = $uid;
     }
 
 	public function __construct(  )
@@ -142,6 +149,31 @@ class IcalEvent
         }
 
         return $text;
+    }
+
+    public function setUid( $uid ) {
+        $this->uid = $uid;
+    }
+
+    public function getUid() {
+        return $this->uid;
+    }
+
+    public function getRecurrenceId() {
+        return $this->recurrenceId;
+    }
+
+    public function setRecurrenceId( $attributes, $parameter ) {
+        $this->recurrenceId = $this->parseDate( $attributes, $parameter );
+        if( $this->recurrenceId!=null ) {
+            $tzone = new \DateTimeZone( date_default_timezone_get() );
+            $this->recurrenceId->setTimezone( $tzone );
+            //D/ Logger::log( 'app', Logger::DEBUG, "RECURRENCE-ID: {$this->recurrenceId->format('r')}" );    
+        }
+    }
+
+    public function hasRecurrenceId() {
+        return ( $this->recurrenceId!=null );    
     }
 
     /**
@@ -315,23 +347,13 @@ class IcalEvent
                 // tento den je v seznamu opakovacich dni
                 $ctEvents++;
 
-                // zkontrolovat proti EXDATE
-                $excluded = false;
-                foreach( $this->exdates as $exdate ) {
-                    if( $exdate == $date ) {
-                        //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
-                        $excluded = true;
-                        break;
-                    }
-                }
-
                 // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-                if( $thisWeekOK && !$excluded && ($date >= $from) ) {
+                if( $thisWeekOK && ($date >= $from) ) {
                     $end = $date->modifyClone( "+ {$delkaSec} sec" );
                     $oneEvent = new \App\Model\IcalEvent();
-                    $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location );
+                    $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                     //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                    $events[] = $oneEvent;               
+                    $this->fillEventInArray( $events, $oneEvent );
                 }
             }
 
@@ -384,23 +406,13 @@ class IcalEvent
             //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
             $ctEvents++;
 
-            // zkontrolovat proti EXDATE
-            $excluded = false;
-            foreach( $this->exdates as $exdate ) {
-                if( $exdate == $date ) {
-                    //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
-                    $excluded = true;
-                    break;
-                }
-            }
-
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( !$excluded && ($date >= $from) ) {
+            if( $date >= $from ) {
                 $end = $date->modifyClone( "+ {$delkaSec} sec" );
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $events[] = $oneEvent;               
+                $this->fillEventInArray( $events, $oneEvent );
             }
 
             $newMonth = intval($date->format('n'));
@@ -448,23 +460,13 @@ class IcalEvent
             //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
             $ctEvents++;
 
-            // zkontrolovat proti EXDATE
-            $excluded = false;
-            foreach( $this->exdates as $exdate ) {
-                if( $exdate == $date ) {
-                    //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
-                    $excluded = true;
-                    break;
-                }
-            }
-
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( !$excluded && ($date >= $from) ) {
+            if( $date >= $from ) {
                 $end = $date->modifyClone( "+ {$delkaSec} sec" );
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $events[] = $oneEvent;               
+                $this->fillEventInArray( $events, $oneEvent );
             }
 
 
@@ -558,23 +560,13 @@ class IcalEvent
             //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
             $ctEvents++;
 
-            // zkontrolovat proti EXDATE
-            $excluded = false;
-            foreach( $this->exdates as $exdate ) {
-                if( $exdate == $date ) {
-                    //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
-                    $excluded = true;
-                    break;
-                }
-            }
-
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( !$excluded && ($date >= $from) ) {
+            if( $date >= $from ) {
                 $end = $date->modifyClone( "+ {$delkaSec} sec" );
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $events[] = $oneEvent;               
+                $this->fillEventInArray( $events, $oneEvent );
             }
 
             $date->modify( "+{$interval} day" );
@@ -603,23 +595,13 @@ class IcalEvent
             //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
             $ctEvents++;
 
-            // zkontrolovat proti EXDATE
-            $excluded = false;
-            foreach( $this->exdates as $exdate ) {
-                if( $exdate == $date ) {
-                    //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
-                    $excluded = true;
-                    break;
-                }
-            }
-
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( !$excluded && ($date >= $from) ) {
+            if( $date >= $from ) {
                 $end = $date->modifyClone( "+ {$delkaSec} sec" );
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $events[] = $oneEvent;               
+                $this->fillEventInArray( $events, $oneEvent );          
             }
 
             $newMonth = intval($date->format('n'));
@@ -646,6 +628,44 @@ class IcalEvent
         }
         
     }
+
+
+    /**
+     * Musi se delat pres tuhle funkci a ne pomoci prosteho vlozeni do pole, 
+     * protoze je potreba smazat z pole pripadne prepsane udalosti 
+     */
+    public function fillEventInArray( &$events, $newEvent ) {
+
+
+        // zkontrolovat proti EXDATE
+        foreach( $this->exdates as $exdate ) {
+            if( $exdate == $newEvent->getStart() ) {
+                //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
+                return;
+            }
+        }
+
+        //D/ Logger::log( 'app', Logger::DEBUG, "zapisuji udalost: {$newEvent}" );   
+
+        // pokud ma udalost vyplnene RECURRENCE-ID, tak prepisuje jeden konkretni vyskyt udalosti se stejnym UID
+        if( $newEvent->hasRecurrenceId() ) {
+            //D/ Logger::log( 'app', Logger::TRACE, "  hledam udalost pro RecurrenceId [{$newEvent->getRecurrenceId()}]" );    
+            // projit pole a najit udalosti se stejnym UID
+            foreach($events as $k => $val) { 
+                if( $val->getUid() === $newEvent->getUid() ) {
+                // pokud maji konkretni zacatek = RECURRENCE-ID, tak z pole smazat
+                    //D/ Logger::log( 'app', Logger::TRACE, "  stejne UID: {$val}" );    
+                    if($val->getStart() == $newEvent->getRecurrenceId() ) { 
+                        //D/ Logger::log( 'app', Logger::DEBUG, "-- udalost rusi starsi zaznam: {$val}" );    
+                        unset($events[$k]); 
+                    } 
+                }
+            } 
+        }
+
+        $events[] = $newEvent;
+    }
+
 
     /**
      * Pouze pro opakovane udalosti. Zaplni udalosti v urcenem casovem okne do pole &events.
