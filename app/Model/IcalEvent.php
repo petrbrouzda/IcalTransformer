@@ -353,7 +353,7 @@ class IcalEvent
                     $oneEvent = new \App\Model\IcalEvent();
                     $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                     //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                    $this->fillEventInArray( $events, $oneEvent );
+                    $oneEvent->writeIntoArray( $events );
                 }
             }
 
@@ -412,7 +412,7 @@ class IcalEvent
                 $oneEvent = new \App\Model\IcalEvent();
                 $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $this->fillEventInArray( $events, $oneEvent );
+                $oneEvent->writeIntoArray( $events );
             }
 
             $newMonth = intval($date->format('n'));
@@ -466,7 +466,7 @@ class IcalEvent
                 $oneEvent = new \App\Model\IcalEvent();
                 $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $this->fillEventInArray( $events, $oneEvent );
+                $oneEvent->writeIntoArray( $events );
             }
 
 
@@ -566,7 +566,7 @@ class IcalEvent
                 $oneEvent = new \App\Model\IcalEvent();
                 $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $this->fillEventInArray( $events, $oneEvent );
+                $oneEvent->writeIntoArray( $events );
             }
 
             $date->modify( "+{$interval} day" );
@@ -601,7 +601,7 @@ class IcalEvent
                 $oneEvent = new \App\Model\IcalEvent();
                 $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
-                $this->fillEventInArray( $events, $oneEvent );          
+                $oneEvent->writeIntoArray( $events );
             }
 
             $newMonth = intval($date->format('n'));
@@ -634,12 +634,12 @@ class IcalEvent
      * Musi se delat pres tuhle funkci a ne pomoci prosteho vlozeni do pole, 
      * protoze je potreba smazat z pole pripadne prepsane udalosti 
      */
-    public function fillEventInArray( &$events, $newEvent ) {
+    public function writeIntoArray( &$events ) {
 
 
         // zkontrolovat proti EXDATE
         foreach( $this->exdates as $exdate ) {
-            if( $exdate == $newEvent->getStart() ) {
+            if( $exdate == $this->getStart() ) {
                 //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
                 return;
             }
@@ -648,14 +648,14 @@ class IcalEvent
         //D/ Logger::log( 'app', Logger::DEBUG, "zapisuji udalost: {$newEvent}" );   
 
         // pokud ma udalost vyplnene RECURRENCE-ID, tak prepisuje jeden konkretni vyskyt udalosti se stejnym UID
-        if( $newEvent->hasRecurrenceId() ) {
+        if( $this->hasRecurrenceId() ) {
             //D/ Logger::log( 'app', Logger::TRACE, "  hledam udalost pro RecurrenceId [{$newEvent->getRecurrenceId()}]" );    
             // projit pole a najit udalosti se stejnym UID
             foreach($events as $k => $val) { 
-                if( $val->getUid() === $newEvent->getUid() ) {
+                if( $val->getUid() === $this->getUid() ) {
                 // pokud maji konkretni zacatek = RECURRENCE-ID, tak z pole smazat
                     //D/ Logger::log( 'app', Logger::TRACE, "  stejne UID: {$val}" );    
-                    if($val->getStart() == $newEvent->getRecurrenceId() ) { 
+                    if($val->getStart() == $this->getRecurrenceId() ) { 
                         //D/ Logger::log( 'app', Logger::DEBUG, "-- udalost rusi starsi zaznam: {$val}" );    
                         unset($events[$k]); 
                     } 
@@ -663,7 +663,7 @@ class IcalEvent
             } 
         }
 
-        $events[] = $newEvent;
+        $events[] = $this;
     }
 
 

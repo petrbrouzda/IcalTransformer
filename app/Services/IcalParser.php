@@ -225,7 +225,7 @@ class IcalParser
                 if( $event->isInDateRange( $this->dateFrom, $this->dateToExclusive ) ) {
                     //D/ Logger::log( 'app', Logger::TRACE, "udalost in range: {$event->getSummary()}" );    
                     // nezapisuju primo do pole, aby se vyhodnotilo pripadne prepsani drivejsi udalosti
-                    $event->fillEventInArray( $this->events, $event );
+                    $event->writeIntoArray( $this->events );
                 } else {
                     //D/ Logger::log( 'app', Logger::TRACE, "udalost mimo range: {$event->getSummary()}" );    
                 }
