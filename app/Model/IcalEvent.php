@@ -70,7 +70,7 @@ class IcalEvent
         return "IcalEvent from:[{$this->dtstart}] to:[{$this->dtend}] summary:[{$this->summary}] [{$this->uid}]";
     }
 
-    private function init( $start, $end, $summary, $description, $location, $uid )
+    private function init( $start, $end, $summary, $description, $location, $uid, $exdates )
     {
         $this->dtstart = $start;
         $this->dtend = $end;
@@ -78,6 +78,7 @@ class IcalEvent
         $this->description = $description;
         $this->location = $location;
         $this->uid = $uid;
+        $this->exdates = $exdates;
     }
 
 	public function __construct(  )
@@ -316,6 +317,7 @@ class IcalEvent
     RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20231101T225959Z;BYDAY=WE
     RRULE:FREQ=WEEKLY;WKST=MO;COUNT=14;BYDAY=TU,TH
     RRULE:FREQ=WEEKLY;WKST=MO;COUNT=13;INTERVAL=2;BYDAY=TU,FR,TH
+    RRULE:FREQ=WEEKLY;BYDAY=FR,MO,TH,TU,WE
     */
     private function fillEventsInDateRangesWeekly( $from, $to, &$events, $untilDate, $maxCount, $delkaSec, $interval ) {
 
@@ -347,11 +349,17 @@ class IcalEvent
                 // tento den je v seznamu opakovacich dni
                 $ctEvents++;
 
+                $end = $date->modifyClone( "+ {$delkaSec} sec" );
+
                 // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-                if( $thisWeekOK && ($date >= $from) ) {
-                    $end = $date->modifyClone( "+ {$delkaSec} sec" );
+                if( $thisWeekOK && $this->isInRange($date, $end, $from, $to ) ) {
+                    // ale mohli jsme prejit koncove datum
+                    if($untilDate!=null && $date>=$untilDate) {
+                        //D/ Logger::log( 'app', Logger::TRACE, "vygenerovano {$ctEvents} udalosti do [{$to}] resp [{$untilDate}], koncim" );            
+                        break;
+                    }
                     $oneEvent = new \App\Model\IcalEvent();
-                    $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
+                    $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid, $this->exdates );
                     //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
                     $oneEvent->writeIntoArray( $events );
                 }
@@ -369,7 +377,7 @@ class IcalEvent
                 //D/ Logger::log( 'app', Logger::TRACE, "vygenerovano maximum {$ctEvents} udalosti, koncim" );   
                 break; 
             }
-            if( $date > $to || ($untilDate!=null && $date>$untilDate) ) {
+            if( $date > $to || ($untilDate!=null && $date>=$untilDate) ) {
                 //D/ Logger::log( 'app', Logger::TRACE, "vygenerovano {$ctEvents} udalosti do [{$to}] resp [{$untilDate}], koncim" );    
                 break;
             }
@@ -403,14 +411,15 @@ class IcalEvent
         $date = $this->dtstart->modifyClone();
         $ctEvents = 0;
         while( true ) {
-            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
+            $end = $date->modifyClone( "+ {$delkaSec} sec" );
+            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date} - {$end}" );    
+
             $ctEvents++;
 
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( $date >= $from ) {
-                $end = $date->modifyClone( "+ {$delkaSec} sec" );
+            if( $this->isInRange($date, $end, $from, $to ) ) {
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid, $this->exdates );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
                 $oneEvent->writeIntoArray( $events );
             }
@@ -457,18 +466,18 @@ class IcalEvent
         $date = $this->dtstart->modifyClone();
         $ctEvents = 0;
         while( true ) {
-            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
+            $end = $date->modifyClone( "+ {$delkaSec} sec" );
+            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date} - {$end}" );    
             $ctEvents++;
 
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( $date >= $from ) {
-                $end = $date->modifyClone( "+ {$delkaSec} sec" );
+            if( $this->isInRange($date, $end, $from, $to ) ) {
+                
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid, $this->exdates );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
                 $oneEvent->writeIntoArray( $events );
             }
-
 
             $newMonth = intval($date->format('n'));
             $newYear = intval($date->format('Y'));
@@ -557,14 +566,14 @@ class IcalEvent
         $date = $this->dtstart->modifyClone();
         $ctEvents = 0;
         while( true ) {
-            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
+            $end = $date->modifyClone( "+ {$delkaSec} sec" );
+            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date} - {$end}" );    
             $ctEvents++;
 
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( $date >= $from ) {
-                $end = $date->modifyClone( "+ {$delkaSec} sec" );
+            if( $this->isInRange($date, $end, $from, $to ) ) {
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid, $this->exdates );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
                 $oneEvent->writeIntoArray( $events );
             }
@@ -592,14 +601,15 @@ class IcalEvent
         $date = $this->dtstart->modifyClone();
         $ctEvents = 0;
         while( true ) {
-            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date}" );    
+            $end = $date->modifyClone( "+ {$delkaSec} sec" );
+
+            //D/ Logger::log( 'app', Logger::TRACE, "    ? kontrola {$date} - $end" );    
             $ctEvents++;
 
             // zapisujeme jen pokud se to prekryva s pozadovanym oknem
-            if( $date >= $from ) {
-                $end = $date->modifyClone( "+ {$delkaSec} sec" );
+            if( $this->isInRange($date, $end, $from, $to ) ) {
                 $oneEvent = new \App\Model\IcalEvent();
-                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid );
+                $oneEvent->init( $date->modifyClone(), $end, $this->summary, $this->description, $this->location, $this->uid, $this->exdates );
                 //D/ Logger::log( 'app', Logger::TRACE, "zapisuji udalost: {$oneEvent}" );    
                 $oneEvent->writeIntoArray( $events );
             }
@@ -636,20 +646,20 @@ class IcalEvent
      */
     public function writeIntoArray( &$events ) {
 
+        //D/ Logger::log( 'app', Logger::DEBUG, "  * udalost: {$this}" );   
 
         // zkontrolovat proti EXDATE
         foreach( $this->exdates as $exdate ) {
+            //D/ Logger::log( 'app', Logger::TRACE, "    kontroluji exdate: {$exdate}" );    
             if( $exdate == $this->getStart() ) {
                 //D/ Logger::log( 'app', Logger::TRACE, "-- excluded: {$exdate}" );    
                 return;
             }
         }
 
-        //D/ Logger::log( 'app', Logger::DEBUG, "zapisuji udalost: {$newEvent}" );   
-
         // pokud ma udalost vyplnene RECURRENCE-ID, tak prepisuje jeden konkretni vyskyt udalosti se stejnym UID
         if( $this->hasRecurrenceId() ) {
-            //D/ Logger::log( 'app', Logger::TRACE, "  hledam udalost pro RecurrenceId [{$newEvent->getRecurrenceId()}]" );    
+            //D/ Logger::log( 'app', Logger::TRACE, "  hledam udalost pro RecurrenceId [{$this->getRecurrenceId()}]" );    
             // projit pole a najit udalosti se stejnym UID
             foreach($events as $k => $val) { 
                 if( $val->getUid() === $this->getUid() ) {
@@ -663,6 +673,7 @@ class IcalEvent
             } 
         }
 
+        //D/ Logger::log( 'app', Logger::DEBUG, "= zapsano: {$this}" );   
         $events[] = $this;
     }
 
@@ -676,7 +687,12 @@ class IcalEvent
         $until = KeyValueAttribute::findValue( $this->rrule, 'UNTIL' );
         if( $until !== '' ) {
             // 20231101T225959Z
-            $untilDate = DateTime::createFromFormat('Ymd\THis\Z', $until, 'Z'  );
+            // 20231224
+            if( strlen($until)==8 ) {
+                $untilDate = DateTime::createFromFormat('Ymd', $until, 'Z'  );
+            } else {
+                $untilDate = DateTime::createFromFormat('Ymd\THis\Z', $until, 'Z'  );
+            }
         }
 
         $maxCount = 10000;
@@ -708,12 +724,23 @@ class IcalEvent
         }
     }
 
+    private function isInRange( $eventFrom, $eventTo, $rangeFrom, $rangeTo ) {
+        if( $eventTo<$rangeFrom ) {
+            // cela v minulosti
+            return false;
+        }
+        if( $eventFrom>$rangeTo ) {
+            // cela v budoucnosti
+            return false;
+        }
+        // nejak se prekryva s oknem
+        return ( ($eventFrom < $rangeTo) && ($eventTo>=$rangeFrom ) );
+    }
 
     public function isInDateRange( $from, $toExclusive )
     {
-        return ( ($this->getStart() < $toExclusive) && ($this->getEnd())>=$from );
+        return $this->isInRange( $this->getStart(), $this->getEnd(), $from, $toExclusive );
     }
-
 
 
     private function parseDate( $attributes, $parameter ) {

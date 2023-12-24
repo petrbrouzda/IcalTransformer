@@ -78,6 +78,7 @@ class IcalParser
 
     /*
     RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20231101T225959Z;BYDAY=WE
+    RRULE:FREQ=WEEKLY;UNTIL=20231224;BYDAY=FR,MO,TH,TU,WE
     */
     /**
      * vytvori: $this->commandAttributes
@@ -144,6 +145,7 @@ class IcalParser
     DTEND ekvivalentne
     EXDATE;TZID=Europe/Prague:20231018T100000
     EXDATE;TZID=Europe/Prague:20231004T100000
+    EXDATE;VALUE=DATE:20231227
     RECURRENCE-ID;TZID=Europe/Prague:20231210T120000   
 
     class 1B 
