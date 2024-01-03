@@ -21,7 +21,6 @@ class IcalParser
     private $reader;
     private $events;
 
-    //TODO: pridat casovou filtraci
 	public function __construct( $handle )
 	{
         $this->reader = new \App\Services\IcalStreamReader($handle);
