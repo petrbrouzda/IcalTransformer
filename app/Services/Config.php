@@ -11,9 +11,15 @@ class Config
     use Nette\SmartObject;
 
     /**
-     * URL kalendare musi zacinat takto
+     * URL kalendare musi zacinat takto - Google
      */
-    public $requiredUrlBase = 'https://calendar.google.com/calendar/ical';
+    public $requiredUrlBaseGoogle = 'https://calendar.google.com/calendar/ical';
+
+    /*
+    * URL kalendare musi zacinat takto - Apple
+        https://p59-caldav.icloud.com/published/2/NDM2M....
+    */
+    public $requiredUrlBaseApple = '/^(https:\/\/[a-z0-9\-]+\.icloud\.com)\/(.+)$/';
 
     /**
      * Jak dlouho plati stazeny soubor kalendare, sekundy

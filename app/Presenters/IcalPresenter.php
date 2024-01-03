@@ -56,8 +56,30 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
 
     private function processData( $url, $dateFrom, $dateTo ) {
 
-        if( substr($url,0,strlen($this->config->requiredUrlBase)) !== $this->config->requiredUrlBase ) {
-            throw new \Exception( "URL musi zacinat {$this->config->requiredUrlBase} . Pokud chcete mit jine kalendare, nainstalujte si aplikaci u sebe a zmente konfiguraci." );
+        // webcal://    
+        if( substr($url,0,9)=='webcal://' ) {
+            $url = 'https://' . substr($url,9);
+        }
+
+        $correctUrl = false;
+
+        /*
+        https://p59-caldav.icloud.com/....
+        */
+        preg_match(
+            $this->config->requiredUrlBaseApple, 
+            $url, 
+            $output_array);
+        if( isset($output_array[2]) ) {
+            $correctUrl = true;
+        }
+
+        if( substr($url,0,strlen($this->config->requiredUrlBaseGoogle)) == $this->config->requiredUrlBaseGoogle ) {
+            $correctUrl = true;
+        }
+
+        if( !$correctUrl ) {
+            throw new \Exception( "URL musi zacinat {$this->config->requiredUrlBaseGoogle} nebo musi byt validnim kalendarem Apple (webcal://*-caldav.icloud.com). Pokud chcete mit jine kalendare, nainstalujte si aplikaci u sebe a zmente konfiguraci." );
         }
 
         $key = "o_{$url}_{$dateFrom}_{$dateTo}";
@@ -173,21 +195,7 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
             $events = array();
             
             foreach( $urls as $url ) {
-                
-                preg_match(
-                    '/^(https:\/\/calendar\.google\.com\/calendar\/ical\/)([A-Za-z\.\%0-9\-\_]+)(.*)$/', 
-                    $url, 
-                    $output_array);
-                if( isset($output_array[2]) ) {
-                    // tohle by se melo vzdy vypisovat
-                    Logger::log( 'app', Logger::DEBUG,  "calendar {$output_array[2]}" );
-                } else {
-                    // tohle jen pri zadani spatneho kalendare
-                    Logger::log( 'app', Logger::DEBUG,  "calendar {$url}" );
-                }
-                // logovani pro pripad hledani chyby
-                Logger::log( 'app', Logger::TRACE,  "calendar {$url}" );
-
+                Logger::log( 'app', Logger::DEBUG,  "calendar {$url}" );
                 $jednyEventy = $this->processData( $url, $this->template->dateFrom, $this->template->dateTo , $events );
                 $events = array_merge( $events, $jednyEventy );
             }
