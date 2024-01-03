@@ -190,6 +190,7 @@ class IcalEvent
     RRULE:FREQ=WEEKLY;WKST=MO;COUNT=14;BYDAY=TU,TH
     RRULE:FREQ=WEEKLY;UNTIL=20110626T130000Z;INTERVAL=2;BYDAY=WE
     RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20231224;INTERVAL=4;BYDAY=MO
+    RRULE:FREQ=WEEKLY;INTERVAL=1
     
     RRULE:FREQ=MONTHLY;COUNT=3;BYMONTHDAY=18
     RRULE:FREQ=MONTHLY;BYDAY=3MO
@@ -248,10 +249,11 @@ class IcalEvent
                 // kolikrat tydne ma nastat?
                 $days = KeyValueAttribute::findValue( $this->rrule, 'BYDAY' );
                 if( $days==='' ) {
-                    Logger::log( 'app', Logger::WARNING, "neimplementovano: pro RRULE:FREQ=WEEKLY nenalezeno BYDAY" );   
-                    return false;    
+                    // pokud neni mapovane na konkretni dny, opakuje se 1x tydne
+                    $pocetTydne = 1;
+                } else {
+                    $pocetTydne = count( explode( ',', $days ) );
                 }
-                $pocetTydne = count( explode( ',', $days ) );
                 $tydnuDopredu = (($countI / $pocetTydne)*$interval) + 2;
                 $maxEndDate =  $this->getStart()->modifyClone("+{$tydnuDopredu} week");
                 if( $maxEndDate < $from ) {
@@ -321,9 +323,13 @@ class IcalEvent
     */
     private function fillEventsInDateRangesWeekly( $from, $to, &$events, $untilDate, $maxCount, $delkaSec, $interval ) {
 
-        // nemusime resit neexistenci polozky, to zkontrolovala isRecurrentInDateRange()
         $days = KeyValueAttribute::findValue( $this->rrule, 'BYDAY' );
-        $daysArray = explode( ',', $days );
+        if( $days ===  '' ) {
+            $daysArray[] = $this->dowMapperToStr[ intval($this->dtstart->format('N')) ];
+            //D/ Logger::log( 'app', Logger::TRACE, "WEEKLY bez BYDAY, nastavuji {$daysArray[0]}" );        
+        } else {
+            $daysArray = explode( ',', $days );
+        }
         //D/ Logger::log( 'app', Logger::TRACE, $daysArray );    
 
         // kontrola, zda tam neni neco neznameho
