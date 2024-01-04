@@ -21,7 +21,7 @@ class IcalEvent
 {
     use Nette\SmartObject;
 
-    private $dowMapperToText = array(
+    private static $dowMapperToText = array(
         'MO' => 'Monday',
         'TU' => 'Tuesday',
         'WE' => 'Wednesday',
@@ -31,7 +31,7 @@ class IcalEvent
         'SU' => 'Sunday'
     );
 
-    private $orderToText = array(
+    private static $orderToText = array(
         '-1' => 'Last',
         '1' => 'First',
         '2' => 'Second',
@@ -40,7 +40,7 @@ class IcalEvent
         '5' => 'Fifth'
     );
 
-    private $dowMapperToStr = array(
+    private static $dowMapperToStr = array(
         1 => 'MO',
         2 => 'TU',
         3 => 'WE',
@@ -326,7 +326,7 @@ class IcalEvent
 
         $days = KeyValueAttribute::findValue( $this->rrule, 'BYDAY' );
         if( $days ===  '' ) {
-            $daysArray[] = $this->dowMapperToStr[ intval($this->dtstart->format('N')) ];
+            $daysArray[] = self::$dowMapperToStr[ intval($this->dtstart->format('N')) ];
             //D/ Logger::log( 'app', Logger::TRACE, "WEEKLY bez BYDAY, nastavuji {$daysArray[0]}" );        
         } else {
             $daysArray = explode( ',', $days );
@@ -335,7 +335,7 @@ class IcalEvent
 
         // kontrola, zda tam neni neco neznameho
         foreach( $daysArray as $dx ) {
-            if( ! in_array( $dx, $this->dowMapperToStr, true ) ) {
+            if( ! in_array( $dx, self::$dowMapperToStr, true ) ) {
                 Logger::log( 'app', Logger::WARNING, "neimplementovane RRULE:BYDAY={$dx}" );   
                 return;
             }
@@ -345,7 +345,7 @@ class IcalEvent
         $ctEvents = 0;
         $weekNo = 0;
         while( true ) {
-            $dow =  $this->dowMapperToStr[ $date->format('N') ];
+            $dow =  self::$dowMapperToStr[ $date->format('N') ];
 
             // ma se generovat tento tyden?
             $thisWeekOK = (($weekNo % $interval) == 0);
@@ -409,10 +409,10 @@ class IcalEvent
         $dayPos = $output_array[1];
         $dayAbbrev = $output_array[2];
         //D/ Logger::log( 'app', Logger::TRACE, "RRULE:BYDAY {$dayPos} / {$dayAbbrev}" );   
-        if( !isset($this->orderToText[$dayPos]) || !isset($this->dowMapperToText[$dayAbbrev]) ) {
+        if( !isset(self::$orderToText[$dayPos]) || !isset(self::$dowMapperToText[$dayAbbrev]) ) {
             Logger::log( 'app', Logger::WARNING, "neznama varianta RRULE:BYDAY {$dayPos} / {$dayAbbrev}" );   
         }
-        $command = "{$this->orderToText[$dayPos]} {$this->dowMapperToText[$dayAbbrev]} of ";
+        $command = self::$orderToText[$dayPos] . ' ' . self::$dowMapperToText[$dayAbbrev]. ' of ';
         //D/ Logger::log( 'app', Logger::TRACE, "RRULE:BYDAY {$dayPos} / {$dayAbbrev} -> [{$command}]" );   
 
         $date = $this->dtstart->modifyClone();
