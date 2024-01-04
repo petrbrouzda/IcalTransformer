@@ -107,7 +107,7 @@ Najděte položku "Tajná adresa ve formátu iCal" a klikněte na ikonu kopírov
 Pokud tam tuto možnost nemáte (je tam jen "veřejná adresa"), nejste přímým vlastníkem kalendáře - typicky u firemních/školních účtů.
 
 
-Chcete získat odkaz na kalendář v Apple iCloud? Popsáno zde: https://twitter.com/zivyobraz/status/1726209060209574377 . V takovém případě ale upravte proměnnou requiredUrlBase v app/Services/Config.php .
+Chcete získat odkaz na kalendář v Apple iCloud? Popsáno zde: https://twitter.com/zivyobraz/status/1726209060209574377 
 
 
 ---
