@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cd ..
+composer dumpautoload
+cd tests
+
+TMP_PATH=/tmp/IcalTransformer
+mkdir -p ${TMP_PATH}
+
+../vendor/nette/tester/src/tester -c ./php.ini --log ${TMP_PATH}/tests.log --temp ${TMP_PATH} .
+
