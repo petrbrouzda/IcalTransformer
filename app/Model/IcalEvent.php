@@ -320,6 +320,7 @@ class IcalEvent
     RRULE:FREQ=WEEKLY;WKST=MO;COUNT=14;BYDAY=TU,TH
     RRULE:FREQ=WEEKLY;WKST=MO;COUNT=13;INTERVAL=2;BYDAY=TU,FR,TH
     RRULE:FREQ=WEEKLY;BYDAY=FR,MO,TH,TU,WE
+    RRULE:FREQ=WEEKLY;INTERVAL=1
     */
     private function fillEventsInDateRangesWeekly( $from, $to, &$events, $untilDate, $maxCount, $delkaSec, $interval ) {
 
