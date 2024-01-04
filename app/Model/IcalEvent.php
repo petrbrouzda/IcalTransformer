@@ -106,7 +106,7 @@ class IcalEvent
         $text = str_replace( '<br>', " \n", $text );
         $text = str_replace( '<BR>', " \n", $text );
         $text = str_replace( '<p>', " \n", $text );
-        $text = str_replace( '<p>', " \n", $text );
+        $text = str_replace( '<P>', " \n", $text );
         $text = str_replace( '&nbsp;', " ", $text );
         $text = strip_tags($text);
         return $text;
