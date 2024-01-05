@@ -79,7 +79,7 @@ class AzuTest extends Tester\TestCase
 
 	public function testAzu2()
 	{
-		$dateFrom = Nette\Utils\DateTime::from('2023-12-22');
+		$dateFrom = Nette\Utils\DateTime::from('2023-12-21');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-03');
 		
 		$handle = fopen('azu.ics','r+');

@@ -732,7 +732,7 @@ class IcalEvent
     }
 
     private function isInRange( $eventFrom, $eventTo, $rangeFrom, $rangeTo ) {
-        if( $eventTo<$rangeFrom ) {
+        if( $eventTo<=$rangeFrom ) {
             // cela v minulosti
             return false;
         }
