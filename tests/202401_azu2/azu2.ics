@@ -8,66 +8,6 @@ X-WR-TIMEZONE:Europe/Prague
 X-WR-CALDESC:Kamenná prodejna Vokolo.cz. Prodej Arduino\, ESP a filamentů p
  ro 3D tisk.
 BEGIN:VEVENT
-DTSTART:20211202T153000Z
-DTEND:20211202T160000Z
-DTSTAMP:20240105T085431Z
-ORGANIZER;CN=sebastian.dibusz@behavee.com:mailto:sebastian.dibusz@behavee.c
- om
-UID:040000008200E00074C5B7101A82E008000000002092014B1FE5D701000000000000000
- 010000000AD74BFC0CEA84A48865B03B07E779D7A
-ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=vokolo
- .cz@gmail.com;X-NUM-GUESTS=0:mailto:vokolo.cz@gmail.com
-ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=Vo
- kolo;X-NUM-GUESTS=0:mailto:shop@vokolo.cz
-CREATED:20211129T114748Z
-DESCRIPTION:\n_____________________________________________________________
- ___________________\nSchůzka Microsoft Teams\nPřipojit se přes počítač nebo
-  mobilní aplikaci\nKliknutím sem se připojíte ke schůzce.<https://teams.mic
- rosoft.com/l/meetup-join/19%3ameeting_ZWM0OTJmODEtMDljYy00ODQwLTk3NzMtOGQyM
- GRjNTFhNjg4%40thread.v2/0?context=%7b%22Tid%22%3a%225f803b80-09ba-4c36-8097
- -5716501dab37%22%2c%22Oid%22%3a%22b26250da-c5ff-4efd-b723-bf51e765cc12%22%7
- d>\nDalší informace<https://aka.ms/JoinTeamsMeeting> | Možnosti schůzky<htt
- ps://teams.microsoft.com/meetingOptions/?organizerId=b26250da-c5ff-4efd-b72
- 3-bf51e765cc12&tenantId=5f803b80-09ba-4c36-8097-5716501dab37&threadId=19_me
- eting_ZWM0OTJmODEtMDljYy00ODQwLTk3NzMtOGQyMGRjNTFhNjg4@thread.v2&messageId=
- 0&language=cs-CZ>\n________________________________________________________
- ________________________\n\n
-LAST-MODIFIED:20230103T115238Z
-LOCATION:Schůzka Microsoft Teams
-SEQUENCE:0
-STATUS:CONFIRMED
-SUMMARY:Maffiliate 2.0
-TRANSP:OPAQUE
-X-MICROSOFT-SKYPETEAMSPROPERTIES:{"cid":"19:meeting_ZWM0OTJmODEtMDljYy00ODQ
- wLTk3NzMtOGQyMGRjNTFhNjg4@thread.v2"\,"private":true\,"type":0\,"mid":0\,"r
- id":0\,"uid":null}
-X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
-X-MICROSOFT-CDO-OWNERAPPTID:-1744979995
-X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY
-X-MICROSOFT-CDO-BUSYSTATUS:TENTATIVE
-X-MICROSOFT-SCHEDULINGSERVICEUPDATEURL:https://api.scheduler.teams.microsof
- t.com/teams/5f803b80-09ba-4c36-8097-5716501dab37/b26250da-c5ff-4efd-b723-bf
- 51e765cc12/19_meeting_ZWM0OTJmODEtMDljYy00ODQwLTk3NzMtOGQyMGRjNTFhNjg4@thre
- ad.v2/0
-X-MICROSOFT-CDO-INSTTYPE:0
-X-MICROSOFT-ONLINEMEETINGCONFLINK:conf:sip:sebastian.dibusz@behavee.com\;gr
- uu\;opaque=app:conf:focus:id:teams:2:0!19:meeting_ZWM0OTJmODEtMDljYy00ODQwL
- Tk3NzMtOGQyMGRjNTFhNjg4-thread.v2!b26250dac5ff4efdb723bf51e765cc12!5f803b80
- 09ba4c3680975716501dab37
-X-MICROSOFT-CDO-APPT-SEQUENCE:0
-X-MICROSOFT-LOCATIONS:[{"DisplayName":"Schůzka Microsoft Teams"\,"LocationA
- nnotation":""\,"LocationUri":""\,"LocationStreet":""\,"LocationCity":""\,"L
- ocationState":""\,"LocationCountry":""\,"LocationPostalCode":""\,"LocationF
- ullAddress":""}]
-X-MICROSOFT-DISALLOW-COUNTER:FALSE
-X-MICROSOFT-DONOTFORWARDMEETING:FALSE
-X-MICROSOFT-CDO-IMPORTANCE:1
-X-MICROSOFT-SKYPETEAMSMEETINGURL:https://teams.microsoft.com/l/meetup-join/
- 19%3ameeting_ZWM0OTJmODEtMDljYy00ODQwLTk3NzMtOGQyMGRjNTFhNjg4%40thread.v2/0
- ?context=%7b%22Tid%22%3a%225f803b80-09ba-4c36-8097-5716501dab37%22%2c%22Oid
- %22%3a%22b26250da-c5ff-4efd-b723-bf51e765cc12%22%7d
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20231226
 DTEND;VALUE=DATE:20231227
 RRULE:FREQ=YEARLY
