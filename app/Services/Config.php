@@ -11,14 +11,12 @@ class Config
     use Nette\SmartObject;
 
     /**
-     * URL kalendare musi zacinat takto - Google
+     * Povolena URL
      */
-    public $requiredUrlBaseGoogle = 'https://calendar.google.com/calendar/ical';
-
-    /**
-     * URL kalendare musi zacinat takto - MS365
-     */
-    public $requiredUrlBaseMs = 'https://outlook.live.com/owa/calendar/';
+    public $requiredUrlBases = array(
+        'https://calendar.google.com/calendar/ical',    // google 
+        'https://outlook.live.com/owa/calendar/'        // ms outlook (office 365)
+    );
 
     /*
     * URL kalendare musi zacinat takto - Apple

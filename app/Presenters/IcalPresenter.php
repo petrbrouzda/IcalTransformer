@@ -56,25 +56,25 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
 
     public function isValidUrl( $url ) {
 
+        // nechceme, aby proslo URL s maskovanym jinym serverem pomoci loginu, tj. neco jako
+		// https://calendar.google.com/calendar/ical/AAAA%40gmail.com/private-bbbbbbb51b2d990873dbbb/basic.ics:heslo@utocnikuvserver.net
         if( strpos($url, '@') !== false ) {
             return false;
         }
 
+        foreach( $this->config->requiredUrlBases as $base ) {
+            if( substr($url,0,strlen($base)) == $base ) {
+                return true;
+            }
+        }
+
+        // pro Apple to resime regexpem
         // https://p59-caldav.icloud.com/....
         preg_match(
             $this->config->requiredUrlBaseApple, 
             $url, 
             $output_array);
         if( isset($output_array[2]) ) {
-            return true;
-        }
-
-        if( substr($url,0,strlen($this->config->requiredUrlBaseGoogle)) == $this->config->requiredUrlBaseGoogle ) {
-            return true;
-        }
-
-        // https://outlook.live.com/owa/calendar/...
-        if( substr($url,0,strlen($this->config->requiredUrlBaseMs)) == $this->config->requiredUrlBaseMs ) {
             return true;
         }
 
