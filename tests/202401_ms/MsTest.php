@@ -17,6 +17,10 @@ class MsTest extends Tester\TestCase
 		Assert::equal( IcalEvent::fixTimeZone('Central Europe Standard Time'), 'Europe/Prague' );
 	}
 
+	public function testZoneReplacing2() {
+		Assert::equal( IcalEvent::fixTimeZone('W. Europe Standard Time'), '' );
+	}
+
 	public function testMscal1()
 	{
 		$dateFrom = Nette\Utils\DateTime::from('2024-01-04');
