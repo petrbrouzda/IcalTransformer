@@ -40,6 +40,9 @@ class UrlParsingTest extends Tester\TestCase
 		$url = 'https://outlook.live.com/owa/calendar/00000000-0000-0000-0000-000000000000/66666-c568-4b54-bd39-65465454645/cid-ABCDE0123/calendar.ics';
 		Assert::true( $presenter->isValidUrl($url), $url );
 
+		$url = 'https://outlook.office365.com/owa/calendar/5daec666664a@datasys.cz/3a47e134ed3845465444654/calendar.ics';
+		Assert::true( $presenter->isValidUrl($url), $url );
+
 		// nechceme, aby proslo URL s maskovanym jinym serverem pomoci loginu
 		$url = 'https://calendar.google.com/calendar/ical/AAAA%40gmail.com/private-bbbbbbb51b2d990873dbbb/basic.ics:heslo@utocnikuvserver.zlo';
 		Assert::false( $presenter->isValidUrl($url), $url );

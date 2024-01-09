@@ -56,9 +56,16 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
 
     public function isValidUrl( $url ) {
 
+        if( substr($url,0,8) !== 'https://' ) {
+            return false;
+        }
+
         // nechceme, aby proslo URL s maskovanym jinym serverem pomoci loginu, tj. neco jako
 		// https://calendar.google.com/calendar/ical/AAAA%40gmail.com/private-bbbbbbb51b2d990873dbbb/basic.ics:heslo@utocnikuvserver.net
-        if( strpos($url, '@') !== false ) {
+        $p1 = strpos($url, '@');
+        $p2 = strpos($url, ':', 9 );
+        if( $p1!==false && $p2!==false && $p2<$p1 ) {
+            Logger::log( 'app', Logger::WARNING ,  "URL vypada, ze obsahuje maskovane URL: [{$url}] {$p1} {$p2}" );
             return false;
         }
 
