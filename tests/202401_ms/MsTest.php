@@ -37,6 +37,8 @@ class MsTest extends Tester\TestCase
 
 		var_dump( $events );
 
+		Assert::equal( $parser->name, 'Kalendář' );
+
 		Assert::equal( count($events), 3 );
 
 		Assert::with($events[0], function () {

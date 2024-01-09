@@ -234,14 +234,27 @@ class IcalParser
         }
     }
 
+    public $name = '';
+    public $description = '';
+    public $timezone = '';
+
     private function readCalendarData()
     {
         while( $this->reader->nextLineAvailable() ) {
             $line = $this->reader->getLine();
             //D/ Logger::log( 'app', Logger::TRACE, "readCalendarData: {$this->reader->command} {$this->reader->firstParam}" );    
-            if( $this->reader->command==="BEGIN" && $this->reader->firstParam==="VEVENT" ) {
-                $this->readEventData();
+            if( $this->reader->command==='X-WR-CALNAME' ) {
+                $this->name = $this->parseText( $line );
             }
+            if( $this->reader->command==='X-WR-TIMEZONE' ) {
+                $this->timezone = $this->parseText( $line );
+            }
+            if( $this->reader->command==='X-WR-CALDESC' ) {
+                $this->description = $this->parseText( $line );
+            }
+            if( $this->reader->command==='BEGIN' && $this->reader->firstParam==='VEVENT' ) {
+                $this->readEventData();
+            } 
         }
     }
 

@@ -115,6 +115,7 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
             $parser = new \App\Services\IcalParser($handle);
             $events = $parser->parse( $dateFrom, $dateTo );
             fclose($handle);
+            Logger::log( 'app', Logger::DEBUG ,  "name: {$parser->name}" );
 
             $this->cache->put( $key, $events,  [
                     Cache::EXPIRE => $this->config->outCacheValidity

@@ -30,6 +30,10 @@ class Azu2Test extends Tester\TestCase
 
 		var_dump( $events );
 
+		Assert::equal( $parser->name, 'Vokolo.cz' );
+		Assert::equal( $parser->description, 'Kamenná prodejna Vokolo.cz. Prodej Arduino, ESP a filamentů pro 3D tisk.' );
+		Assert::equal( $parser->timezone, 'Europe/Prague' );
+
 		Assert::equal( count($events), 2 );
 
 		Assert::with($events[0], function () {
