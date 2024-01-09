@@ -44,8 +44,8 @@ class IcalParser
     }
 
 
-    private $commandAttributes;
-    private $parameter;
+    public $commandAttributes;
+    public $parameter;
 
     /*
     DTSTART;VALUE=DATE:20230731

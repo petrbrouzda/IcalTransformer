@@ -870,6 +870,8 @@ class IcalEvent
     /*
     EXDATE;TZID=Europe/Prague:20231018T100000
     EXDATE;TZID=Europe/Prague:20231004T100000
+    EXDATE;TZID=Central Europe Standard Time:20230316T113000,20230706T113000,20230720T113000,20230727T113000,20230803T113000,20230824T113000,20230928T113000,20231026T113000,20231228T113000
+
     */
     public function setExdate( $attributes, $parameter ) 
     {
@@ -878,12 +880,15 @@ class IcalEvent
         //D/     Logger::log( 'app', Logger::DEBUG, " - {$attr->key} = {$attr->value}" );    
         //D/ }
 
-        $tst = $this->parseDate( $attributes, $parameter );
-        if( $tst!=null ) {
-            $tzone = new \DateTimeZone( date_default_timezone_get() );
-            $tst->setTimezone( $tzone );
-            //D/ Logger::log( 'app', Logger::DEBUG, "EXDATE: {$tst->format('r')}" );    
-            $this->exdates[] = $tst;
+        $parameters = explode( ',', $parameter );
+        foreach( $parameters as $oneDate ) {
+            $tst = $this->parseDate( $attributes, $oneDate );
+            if( $tst!=null ) {
+                $tzone = new \DateTimeZone( date_default_timezone_get() );
+                $tst->setTimezone( $tzone );
+                //D/ Logger::log( 'app', Logger::DEBUG, "EXDATE: {$tst->format('r')}" );    
+                $this->exdates[] = $tst;
+            }
         }
     }
 
