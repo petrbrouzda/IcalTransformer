@@ -750,6 +750,29 @@ class IcalEvent
     }
 
 
+    /**
+     * Tabulka překladů timezon pro MS kalendáře
+     */
+    private static $timeZoneFix = array (
+        'Central Europe Standard Time' => 'Europe/Prague'
+    );
+
+    /**
+     * Microsoft kalendáře si definují vlastní timezony pojmenované jinak než systémové. 
+     * Zatím nechci parsovat sekce VTIMEZONE, takže ošklivý hack.
+     */
+    public static function fixTimeZone( $timeZone ) {
+        
+        if( $timeZone==='' ) return '';
+
+        foreach( self::$timeZoneFix as $key => $value ) {
+            if( $timeZone === $key ) {
+                return $value;
+            }
+        }
+        return $timeZone;
+    }
+
     private function parseDate( $attributes, $parameter ) {
         $unknown = KeyValueAttribute::findUnknownKeys( $attributes, 'VALUE,TZID' );
         if( count($unknown)>0 ) {
@@ -775,8 +798,9 @@ class IcalEvent
         $regexTZ = '/^[0-9]{8}T[0-9]{6}$/';
         if (preg_match($regexTZ, $parameter )) {
             $tzone = KeyValueAttribute::findValue( $attributes, 'TZID' );
-            //D/ Logger::log( 'app', Logger::TRACE, "varianta bez timezony ve val; explicitni timezona={$tzone}" );    
-            return DateTime::createFromFormat('Ymd\THis', $parameter, $tzone==="" ? null : $tzone );
+            $tzone2 = self::fixTimeZone($tzone);
+            //D/ Logger::log( 'app', Logger::TRACE, "varianta bez timezony ve val; explicitni timezona=[{$tzone}]->[{$tzone2}]" );    
+            return DateTime::createFromFormat('Ymd\THis', $parameter, $tzone2==="" ? null : $tzone2 );
         }
 
         Logger::log( 'app', Logger::WARNING, "datum/cas: nezpracovano {$parameter}" );    
