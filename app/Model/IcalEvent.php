@@ -17,6 +17,9 @@ use Nette;
 use \App\Services\Logger;
 use Nette\Utils\DateTime;
 
+use DateTimeZone;
+use Exception;
+
 class IcalEvent
 {
     use Nette\SmartObject;
@@ -754,23 +757,37 @@ class IcalEvent
      * Tabulka překladů timezon pro MS kalendáře
      */
     private static $timeZoneFix = array (
-        'Central Europe Standard Time' => 'Europe/Prague'
+        'Central Europe Standard Time' => 'Europe/Prague',
+        'Central European Standard Time' => 'Europe/Prague',
+        'Romance Standard Time'  => 'Europe/Prague'
     );
 
     /**
      * Microsoft kalendáře si definují vlastní timezony pojmenované jinak než systémové. 
      * Zatím nechci parsovat sekce VTIMEZONE, takže ošklivý hack.
+     * Pokud najdeme zónu v tabulce, použijeme jí.
      */
     public static function fixTimeZone( $timeZone ) {
         
         if( $timeZone==='' ) return '';
 
+        $out = $timeZone;
+
         foreach( self::$timeZoneFix as $key => $value ) {
             if( $timeZone === $key ) {
-                return $value;
+                $out = $value;
+                break;
             }
         }
-        return $timeZone;
+
+        try {
+            $test = new DateTimeZone($out);
+        } catch (Exception $e) {
+            Logger::log( 'app', Logger::DEBUG, "  neznama timezona [{$out}]" );    
+            $out = '';
+        }
+
+        return $out;
     }
 
     private function parseDate( $attributes, $parameter ) {

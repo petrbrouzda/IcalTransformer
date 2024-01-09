@@ -17,7 +17,7 @@ class MsTest extends Tester\TestCase
 		Assert::equal( IcalEvent::fixTimeZone('Central Europe Standard Time'), 'Europe/Prague' );
 	}
 
-	public function testMscal()
+	public function testMscal1()
 	{
 		$dateFrom = Nette\Utils\DateTime::from('2024-01-04');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-10');
@@ -59,6 +59,35 @@ class MsTest extends Tester\TestCase
 			Assert::equal( $this->getEnd()->getTimestamp(), Nette\Utils\DateTime::from('2024-01-09 14:30:00 +01:00')->getTimestamp() ); 
 		});
 
+	}
+
+	public function testMscal2()
+	{
+		$dateFrom = Nette\Utils\DateTime::from('2023-12-04');
+		$dateTo = Nette\Utils\DateTime::from('2023-12-10');
+		
+		$handle = fopen('calendar2.ics','r+');
+		$parser = new \App\Services\IcalParser($handle);
+		$events = $parser->parse( $dateFrom, $dateTo );
+		fclose($handle);
+
+		usort( $events, function($first,$second){
+			if( $first->getStart() < $second->getStart() ) return -1;
+			if( $first->getStart() > $second->getStart() ) return 1;
+			if( $first->getEnd() < $second->getEnd() ) return -1;
+			if( $first->getEnd() > $second->getEnd() ) return 1;
+			return 0;
+		});
+
+		var_dump( $events );
+
+		Assert::equal( count($events), 1 );	
+
+		Assert::with($events[0], function () {
+			Assert::equal( $this->getSummary(), 'DATASYS Vánoční večírek' ); 
+			Assert::equal( $this->getStart()->getTimestamp(), Nette\Utils\DateTime::from('2023-12-07 16:00:00 +01:00')->getTimestamp() ); 
+			Assert::equal( $this->getEnd()->getTimestamp(), Nette\Utils\DateTime::from('2023-12-08 00:00:00 +01:00')->getTimestamp() ); 
+		});
 	}
 }
 
