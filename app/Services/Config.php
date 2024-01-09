@@ -15,7 +15,8 @@ class Config
      */
     public $requiredUrlBases = array(
         'https://calendar.google.com/calendar/ical',    // google 
-        'https://outlook.live.com/owa/calendar/'        // ms outlook (office 365)
+        'https://outlook.live.com/owa/calendar/',        // ms outlook (live)
+        'https://outlook.office365.com/owa/calendar/'   // ms outlook (office 365)
     );
 
     /*
