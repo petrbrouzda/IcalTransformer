@@ -15,6 +15,11 @@ class Config
      */
     public $requiredUrlBaseGoogle = 'https://calendar.google.com/calendar/ical';
 
+    /**
+     * URL kalendare musi zacinat takto - MS365
+     */
+    public $requiredUrlBaseMs = 'https://outlook.live.com/owa/calendar/';
+
     /*
     * URL kalendare musi zacinat takto - Apple
         https://p59-caldav.icloud.com/published/2/NDM2M....

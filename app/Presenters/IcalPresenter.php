@@ -36,7 +36,7 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
     /** @var \App\Services\Config */
     private $config;
 
-    public function __construct(\App\Services\Downloader $downloader, \App\Services\SmartCache $cache , \App\Services\Config $config )
+    public function __construct(?\App\Services\Downloader $downloader, ?\App\Services\SmartCache $cache , \App\Services\Config $config )
     {
         $this->downloader = $downloader;
         $this->cache = $cache;
@@ -54,32 +54,51 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    private function processData( $url, $dateFrom, $dateTo ) {
+    public function isValidUrl( $url ) {
 
-        // webcal://    
-        if( substr($url,0,9)=='webcal://' ) {
-            $url = 'https://' . substr($url,9);
+        if( strpos($url, '@') !== false ) {
+            return false;
         }
 
-        $correctUrl = false;
-
-        /*
-        https://p59-caldav.icloud.com/....
-        */
+        // https://p59-caldav.icloud.com/....
         preg_match(
             $this->config->requiredUrlBaseApple, 
             $url, 
             $output_array);
         if( isset($output_array[2]) ) {
-            $correctUrl = true;
+            return true;
         }
 
         if( substr($url,0,strlen($this->config->requiredUrlBaseGoogle)) == $this->config->requiredUrlBaseGoogle ) {
-            $correctUrl = true;
+            return true;
         }
 
-        if( !$correctUrl ) {
-            throw new \Exception( "URL musi zacinat {$this->config->requiredUrlBaseGoogle} nebo musi byt validnim kalendarem Apple (webcal://*-caldav.icloud.com). Pokud chcete mit jine kalendare, nainstalujte si aplikaci u sebe a zmente konfiguraci." );
+        // https://outlook.live.com/owa/calendar/...
+        if( substr($url,0,strlen($this->config->requiredUrlBaseMs)) == $this->config->requiredUrlBaseMs ) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public static function prepareUrl( $url ) {
+
+        // webcal://    
+        if( substr($url,0,9)=='webcal://' ) {
+            $url = 'https://' . substr($url,9);
+        }
+        return $url;
+
+    }
+
+
+    private function processData( $url, $dateFrom, $dateTo ) {
+
+        $url = self::prepareUrl( $url );
+
+        if( !$this->isValidUrl($url) ) {
+            throw new \Exception( "URL musi byt validnim kalendarem Apple, Google ci Microsoft. Pokud chcete mit jine kalendare, nainstalujte si aplikaci u sebe a zmente konfiguraci. [{$url}]" );
         }
 
         $key = "o_{$url}_{$dateFrom}_{$dateTo}";
