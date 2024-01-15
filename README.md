@@ -1,11 +1,11 @@
 # IcalTransformer
 
-Načte ICAL verzi Google kalendáře a vrátí události v zadaném časovém okně ve formě jednoduchého JSON dokumentu.
+Načte ICAL verzi Apple, Google nebo MS Office kalendáře a vrátí události v zadaném časovém okně ve formě jednoduchého JSON dokumentu.
 Vyzkoušejte si přes **přehledný testovací formulář** na adrese https://lovecka.info/IcalTransformer/
 
 Je určeno např. pro zobrazení kalendáře na displejích meteostanic se slabým procesorem.
 
-Stahované ICAL kalendáře si kešuje - nestahuje je častěji než jednou za hodinu, i když přijde požadavek častěji. 
+Stahované ICAL kalendáře si aplikace kešuje - nestahuje je častěji než jednou za hodinu, i když přijde požadavek častěji. 
 Stejně tak si kešuje i další zpracování dokumentu. 
 I pokud budete zasílat požadavky opakovaně častěji, k výpočtům dojde jen jednou za hodinu.
 
@@ -88,27 +88,58 @@ JSON je jednoduchý. Ke každé události obsahuje předmět (summary), text (de
 ```
 
 ---
-# Jak získat URL na ICAL soubor Google Kalendáře?
+# Jak získat URL na iCalendar soubor kalendáře?
 
-Otevřete si svůj Google kalendář.
+Obecně je potřeba získat odkaz na neveřejnou adresu kalendáře ve formátu ICS, což lze bez problému u Applu, Googlu i Microsoftu najít v nastavení sdílení konkrétního kalendáře.
 
-Na levé straně pod měsíčním kalendářem a hledacím polem je seznam zobrazených kalendářů. Klikněte na trojtečku u kalendáře:
+## Apple
 
-![](www/img/c1.png)
+**Z počítače:**
+ * Na iCloud.com se přihlaste do svého Apple účtu.
+ * Zvolte v aplikacích Kalendář:\
+<img src="www/img/Apple-1.png" alt="drawing" width="290"/>
 
-Zvolte "Nastavení a sdílení":
+ * V levém menu u konkrétního kalendáře zvolte možnost "Sdílet kalendář" (ikona uživatele): \
+<img src="www/img/Apple-2.png" alt="drawing" width="290"/>
+  * Zapněte možnost veřejný kalendář:\
+<img src="www/img/Apple-3.png" alt="drawing" width="290"/>
+  * A odkaz si zkopírujte.
 
-![](www/img/c2.png)
+**Z telefonu:** 
+ * V aplikaci Kalendáře zobrazte seznam/přehled událostí a tapněte dole na liště na odkaz "Kalendáře".
+ * U konkrétního kalendáře dejte v řádku "i" pro více informací.
+ * Zapněte "Veřejný kalendář" a dejte "Sdílet odkaz", který následně můžete přeposlat.
 
-Najděte položku "Tajná adresa ve formátu iCal" a klikněte na ikonu kopírování u ní.
+## Google
 
-![](www/img/c3.png)
+ * Otevřete si svůj Google kalendář.
+ * Na levé straně pod měsíčním kalendářem a hledacím polem je seznam zobrazených kalendářů. Klikněte na trojtečku u konkrétního kalendáře:
 
-Pokud tam tuto možnost nemáte (je tam jen "veřejná adresa"), nejste přímým vlastníkem kalendáře - typicky u firemních/školních účtů.
+<img src="www/img/Google-1.png" alt="drawing" width="290"/>
 
+ * Zvolte "Nastavení a sdílení":
 
-Chcete získat odkaz na kalendář v Apple iCloud? Popsáno zde: https://twitter.com/zivyobraz/status/1726209060209574377 
+<img src="www/img/Google-2.png" alt="drawing" width="290"/>
 
+ * Najděte položku "Tajná adresa ve formátu iCal" a klikněte na ikonu kopírování u ní.
+
+<img src="www/img/Google-3.png" alt="drawing" width="500"/>
+
+ * Pokud tam tuto možnost nemáte (je tam jen "veřejná adresa"), nejste přímým vlastníkem kalendáře - typicky u firemních/školních účtů.
+
+## Microsoft
+
+ * Ve webové verzi Office kalendáře zvolte v horním menu "Zobrazit" a "Nastavení kalendáře" (případně jen ikona ozubeného kola):
+
+ <img src="www/img/MS-1.png" alt="drawing" width="500"/>
+ 
+* V nastavení v levém menu pod "Kalendář" zvolte položku "Sdílené kalendáře" a zde v sekci "Publikovat kalendář" přepněte oprávnění na "Může zobrazovat všechny podrobnosti" a klikněte na "Publikovat":
+
+<img src="www/img/MS-2.png" alt="drawing" width="500"/>
+ 
+ * Následně se vám ukážou dva odkazy ze zkopírování - zkopírujte ten ICS:
+
+<img src="www/img/MS-3.png" alt="drawing" width="500"/>
 
 ---
 # Popis instalace
