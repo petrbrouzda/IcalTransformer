@@ -18,7 +18,7 @@ class MsTest extends Tester\TestCase
 	}
 
 	public function testZoneReplacing2() {
-		Assert::equal( IcalEvent::fixTimeZone('W. Europe Standard Time'), '' );
+		Assert::equal( IcalEvent::fixTimeZone('Xxxxx Time'), '' );
 	}
 
 	public function testMscal1()
