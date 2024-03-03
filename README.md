@@ -97,11 +97,17 @@ Obecně je potřeba získat odkaz na neveřejnou adresu kalendáře ve formátu 
 **Z počítače:**
  * Na iCloud.com se přihlaste do svého Apple účtu.
  * Zvolte v aplikacích Kalendář:
+
 <img src="www/img/Apple-1.png" alt="drawing" width="290"/>
+
  * V levém menu u konkrétního kalendáře zvolte možnost "Sdílet kalendář" (ikona uživatele):
+
 <img src="www/img/Apple-2.png" alt="drawing" width="290"/>
+
  * Zapněte možnost veřejný kalendář:
+
 <img src="www/img/Apple-3.png" alt="drawing" width="290"/>
+
  * A odkaz si zkopírujte.
 
 
