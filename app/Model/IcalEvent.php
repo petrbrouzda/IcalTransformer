@@ -859,7 +859,7 @@ class IcalEvent
 		'China Standard Time' => 'Asia/Chongqing',
 		'Choibalsan Time' => 'Asia/Choibalsan',
 		'Christmas Island Time' => 'Indian/Christmas',
-		'India Standard Time' => 'Asia/Calcutta',
+		'India Standard Time' => 'Asia/Kolkata',
 		'Indian Ocean Territory Time' => 'Indian/Chagos',
 		'Indochina Time' => 'Asia/Bangkok',
 		'Iran Standard Time' => 'Asia/Tehran',
