@@ -16,7 +16,7 @@ Stránka pro podání JSON dat sedí na adrese https://vas-server/IcalTransforme
 (možno vyzkoušet na https://lovecka.info/IcalTransformer/ical/data )
 a bere následující GET parametry:
 
-*  **url** - URL ICAL kalendáře; může být více adres oddělených znakem "pípa", tedy |. Musí bát URL-encoded!
+*  **url** - URL ICAL kalendáře; může být více adres oddělených znakem "pípa", tedy |. Musí být URL-encoded!
 *  **format** - "json" nebo "html"
 *  **htmlAllowed** - "no" znamená, že v popisech události se ořežou HTML tagy; "yes" je tam nechá
 *  **mode** - určení, které události se mají zobrazit. Buď "todayplus" nebo "daterange".
