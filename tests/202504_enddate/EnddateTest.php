@@ -12,6 +12,7 @@ require '../bootstrap.php';
 use Tester\Assert;
 use \App\Services\IcalParser;
 use \App\Services\Logger;
+use \App\Services\IcalTools;
 
 class EnddateTest extends Tester\TestCase
 {
@@ -25,11 +26,7 @@ class EnddateTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2025-04-01');
 		$dateTo = Nette\Utils\DateTime::from('2025-04-30');
 		
-		$handle = fopen('enddate.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
-
+		$events = IcalTools::readEventsFromFile( 'enddate.ics', $dateFrom, $dateTo );
 		usort( $events, function($first,$second){
 			if( $first->getStart() < $second->getStart() ) return -1;
 			if( $first->getStart() > $second->getStart() ) return 1;
@@ -58,12 +55,8 @@ class EnddateTest extends Tester\TestCase
 
 		$dateFrom = Nette\Utils\DateTime::from('2025-04-16');
 		$dateTo = Nette\Utils\DateTime::from('2025-04-30');
-		
-		$handle = fopen('enddate.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
 
+		$events = IcalTools::readEventsFromFile( 'enddate.ics', $dateFrom, $dateTo );
 		usort( $events, function($first,$second){
 			if( $first->getStart() < $second->getStart() ) return -1;
 			if( $first->getStart() > $second->getStart() ) return 1;

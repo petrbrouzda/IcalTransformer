@@ -15,12 +15,8 @@ class PkloskoTest extends Tester\TestCase
 	{
 		$dateFrom = Nette\Utils\DateTime::from('2024-02-04');
 		$dateTo = Nette\Utils\DateTime::from('2024-03-14');
-		
-		$handle = fopen('pklosko.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
 
+		$events = IcalTools::readEventsFromFile( 'pklosko.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );

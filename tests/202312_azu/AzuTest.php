@@ -16,11 +16,7 @@ class AzuTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2024-01-01');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-08');
 		
-		$handle = fopen('azu.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
-
+		$events = IcalTools::readEventsFromFile( 'azu.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );
@@ -77,11 +73,7 @@ class AzuTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2023-12-21');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-03');
 		
-		$handle = fopen('azu.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
-
+		$events = IcalTools::readEventsFromFile( 'azu.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );

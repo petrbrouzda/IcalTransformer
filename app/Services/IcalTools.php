@@ -23,4 +23,14 @@ class IcalTools
             });
         return $events;
     }
+
+
+    public static function readEventsFromFile( $fileName, $dateFrom, $dateTo ) 
+    {
+        $handle = fopen($fileName,'r+');
+		$parser = new \App\Services\IcalParser($handle);
+		$events = $parser->parse( $dateFrom, $dateTo );
+		fclose($handle);
+        return $events;
+    }
 }

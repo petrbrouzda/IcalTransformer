@@ -18,11 +18,7 @@ class NeciselnyDenTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2023-12-01');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-01');
 		
-		$handle = fopen('NeciselnyDen.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
-
+		$events = IcalTools::readEventsFromFile( 'NeciselnyDen.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );
@@ -52,11 +48,7 @@ class NeciselnyDenTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2024-02-01');
 		$dateTo = Nette\Utils\DateTime::from('2024-03-01');
 		
-		$handle = fopen('NeciselnyDen.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
-
+		$events = IcalTools::readEventsFromFile( 'NeciselnyDen.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );

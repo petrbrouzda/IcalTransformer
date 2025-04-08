@@ -16,11 +16,7 @@ class YourTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2023-12-08');
 		$dateTo = Nette\Utils\DateTime::from('2023-12-12');
 		
-		$handle = fopen('your.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
-
+		$events = IcalTools::readEventsFromFile( 'your.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );

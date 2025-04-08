@@ -27,11 +27,14 @@ class MsTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2024-01-04');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-10');
 		
+		// NENI nahrazeno za 
+		// $events = IcalTools::readEventsFromFile( 'calendar.ics', $dateFrom, $dateTo );
+		// protoze nize pracuju s #parser
 		$handle = fopen('calendar.ics','r+');
 		$parser = new \App\Services\IcalParser($handle);
 		$events = $parser->parse( $dateFrom, $dateTo );
 		fclose($handle);
-
+		
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );
@@ -65,11 +68,7 @@ class MsTest extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2023-12-04');
 		$dateTo = Nette\Utils\DateTime::from('2023-12-10');
 		
-		$handle = fopen('calendar2.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
-
+		$events = IcalTools::readEventsFromFile( 'calendar2.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );

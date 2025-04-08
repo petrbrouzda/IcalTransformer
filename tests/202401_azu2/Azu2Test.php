@@ -16,11 +16,13 @@ class Azu2Test extends Tester\TestCase
 		$dateFrom = Nette\Utils\DateTime::from('2024-01-05');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-07');
 		
+		// NENI nahrazeno za 
+		// $events = IcalTools::readEventsFromFile( 'azu2.ics', $dateFrom, $dateTo );
+		// protoze nize pracuju s #parser
 		$handle = fopen('azu2.ics','r+');
 		$parser = new \App\Services\IcalParser($handle);
 		$events = $parser->parse( $dateFrom, $dateTo );
 		fclose($handle);
-
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );

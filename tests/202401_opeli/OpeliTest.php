@@ -15,12 +15,8 @@ class OpeliTest extends Tester\TestCase
 	{
 		$dateFrom = Nette\Utils\DateTime::from('2024-01-04');
 		$dateTo = Nette\Utils\DateTime::from('2024-01-14');
-		
-		$handle = fopen('opeli.ics','r+');
-		$parser = new \App\Services\IcalParser($handle);
-		$events = $parser->parse( $dateFrom, $dateTo );
-		fclose($handle);
 
+		$events = IcalTools::readEventsFromFile( 'opeli.ics', $dateFrom, $dateTo );
 		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );
