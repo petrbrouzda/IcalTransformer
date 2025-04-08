@@ -16,7 +16,7 @@ Stránka pro podání JSON dat sedí na adrese https://vas-server/IcalTransforme
 (možno vyzkoušet na https://lovecka.info/IcalTransformer/ical/data )
 a bere následující GET parametry:
 
-*  **url** - URL ICAL kalendáře; může být více adres oddělených znakem "pípa", tedy |. Musí bát URL-encoded!
+*  **url** - URL ICAL kalendáře; může být více adres oddělených znakem "pípa", tedy |. Musí být URL-encoded!
 *  **format** - "json" nebo "html"
 *  **htmlAllowed** - "no" znamená, že v popisech události se ořežou HTML tagy; "yes" je tam nechá
 *  **mode** - určení, které události se mají zobrazit. Buď "todayplus" nebo "daterange".
@@ -96,14 +96,20 @@ Obecně je potřeba získat odkaz na neveřejnou adresu kalendáře ve formátu 
 
 **Z počítače:**
  * Na iCloud.com se přihlaste do svého Apple účtu.
- * Zvolte v aplikacích Kalendář:\
+ * Zvolte v aplikacích Kalendář:
+
 <img src="www/img/Apple-1.png" alt="drawing" width="290"/>
 
- * V levém menu u konkrétního kalendáře zvolte možnost "Sdílet kalendář" (ikona uživatele): \
+ * V levém menu u konkrétního kalendáře zvolte možnost "Sdílet kalendář" (ikona uživatele):
+
 <img src="www/img/Apple-2.png" alt="drawing" width="290"/>
-  * Zapněte možnost veřejný kalendář:\
+
+ * Zapněte možnost veřejný kalendář:
+
 <img src="www/img/Apple-3.png" alt="drawing" width="290"/>
-  * A odkaz si zkopírujte.
+
+ * A odkaz si zkopírujte.
+
 
 **Z telefonu:** 
  * V aplikaci Kalendáře zobrazte seznam/přehled událostí a tapněte dole na liště na odkaz "Kalendáře".
@@ -147,7 +153,7 @@ Obecně je potřeba získat odkaz na neveřejnou adresu kalendáře ve formátu 
 Potřebujete:
 
 * webový server s podporou pro přepisování URL – tedy pro Apache httpd je potřeba zapnutý **mod_rewrite**
-* rozumnou verzi PHP (nyní mám v provozu na 7.2)
+* rozumnou verzi PHP (nyní mám v provozu na 8.1, mělo by to fungovat na 8.0 a novějších)
 
 Instalační kroky:
 
