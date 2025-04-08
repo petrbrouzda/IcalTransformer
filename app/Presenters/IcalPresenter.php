@@ -146,47 +146,7 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    private $dny = [ ' ', 'po', 'út', 'st', 'čt', 'pá', 'so', 'ne' ];
-    private $dnyDlouhe = [ ' ', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota', 'neděle' ];
-
-    private function hezkeDatum( $date )
-    {
-        $today = new Nette\Utils\DateTime();
-        $today->setTime( 0, 0, 0, 0 );
-
-        $dateT = $date->format('Y-m-d');
-
-        if( strcmp( $today->format('Y-m-d') , $dateT)==0 ) {
-            return "" . $date->format('H:i');
-        }
-
-        if( strcmp( $today->modifyClone('+1 day')->format('Y-m-d') , $dateT)==0 ) {
-            return "zítra " . $date->format('H:i');
-        }
-
-        $datum = '';
-
-        if( $today->getTimestamp() >= $date->getTimestamp() ) {
-            // v minulosti
-            $datum = $this->dny[$date->format('N')] . ' ' . $date->format( 'j.n.' );
-        } else {
-            // v budoucnosti
-            $interval = $today->diff( $date );
-            $days = $interval->y * 365 + $interval->m * 31 + $interval->d + 1;
-            if( $days < 6 ) {
-                $datum = $this->dnyDlouhe[$date->format('N')];
-            } else {
-                $datum = $this->dny[$date->format('N')] . ' ' . $date->format( 'j.n.' );
-            }
-        }
-        $cas = $date->format('H:i');
-        if( $cas==='00:00' ) {
-            // zacina o pulnoci, nebudeme cas udavat
-        } else {
-            $datum = $datum . ' ' . $cas;
-        }
-        return $datum;
-    }
+    
 
 
     public function renderData( $url, $mode, $format, $from, $to, $rangeDays, $htmlAllowed )
@@ -230,13 +190,6 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
 
 
             $events = IcalTools::sortEvents( $events );
-            /* usort( $events, function($first,$second){
-                if( $first->getStart() < $second->getStart() ) return -1;
-                if( $first->getStart() > $second->getStart() ) return 1;
-                if( $first->getEnd() < $second->getEnd() ) return -1;
-                if( $first->getEnd() > $second->getEnd() ) return 1;
-                return 0;
-            }); */
 
             if( $format==="html" ) {
                 $this->template->events = $events;
@@ -246,48 +199,7 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
 
             // pokud je pozadavek na JSON vystup, provest transformaci
             if( $format==="json") {
-                foreach( $events as $event ) {
-                    $rc = array();
-                    $rc['description'] = $event->getDescription( $this->template->htmlAllowed );
-                    $rc['location'] = $event->getLocation( $this->template->htmlAllowed );
-                    $rc['summary'] = $event->getSummary( $this->template->htmlAllowed );
-                    $rc['time_start_i'] = $event->getStart()->format('c');
-                    $rc['time_start_e'] = $event->getStart()->getTimestamp();
-
-                    if( $mode==="todayplus" ) {
-                        // pokud se ptáme ode dneška a začátek je v minulosti, speciální formátování
-                        $dnesek = new Nette\Utils\DateTime();
-                        $dnesek->setTime( 0, 0, 0, 0 );
-                        if( $dnesek->getTimestamp() > $event->getStart()->getTimestamp() ) {
-                            $interval = $event->getStart()->diff( new Nette\Utils\DateTime() );
-                            // zakladni vypocet, o presnost nejde
-                            $days = $interval->y * 365 + $interval->m * 31 + $interval->d + 1;
-                            $rc['time_start_t'] = "({$days}. den)";
-                        } else {
-                            $rc['time_start_t'] = $this->hezkeDatum( $event->getStart() );
-                        }
-                    } else {
-                        $rc['time_start_t'] = $this->hezkeDatum( $event->getStart() );
-                    }
-
-                    $rc['time_end_i'] = $event->getEnd()->format('c');
-                    $rc['time_end_e'] = $event->getEnd()->getTimestamp();
-                    $rc['time_end_t'] = $this->hezkeDatum( $event->getEnd() );
-
-                    // speciální formátování pro jednodenní celodenní události - nebude fungovat pro dny se změnou času
-                    if( $rc['time_end_e']-$rc['time_start_e']==86400) {
-                        if( $rc['time_start_t']==='00:00' ) {
-                            $rc['time_start_t']='dnes';
-                            $rc['time_end_t']='dnes';
-                        }
-                        if( $rc['time_start_t']==='zítra 00:00' ) {
-                            $rc['time_start_t']='zítra';
-                            $rc['time_end_t']='zítra';
-                        }
-                    }
-
-                    $result[] = $rc;
-                }
+                $result = IcalTools::convertEventsToJson( $events, $mode, $this->template->htmlAllowed, new Nette\Utils\DateTime() );
             }
 
             $time_end = microtime(true);
