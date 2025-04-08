@@ -18,8 +18,9 @@ use Nette\Utils\Json;
 use Nette\Utils\DateTime;
 
 use \App\Services\Logger;
-
+use \App\Services\IcalTools;
 use \App\Services\SmartCache;
+
 // je potreba kvuli konstantam
 use Nette\Caching\Cache;
 
@@ -227,13 +228,15 @@ final class IcalPresenter extends Nette\Application\UI\Presenter
                 $events = array_merge( $events, $jednyEventy );
             }
 
-            usort( $events, function($first,$second){
+
+            $events = IcalTools::sortEvents( $events );
+            /* usort( $events, function($first,$second){
                 if( $first->getStart() < $second->getStart() ) return -1;
                 if( $first->getStart() > $second->getStart() ) return 1;
                 if( $first->getEnd() < $second->getEnd() ) return -1;
                 if( $first->getEnd() > $second->getEnd() ) return 1;
                 return 0;
-            });
+            }); */
 
             if( $format==="html" ) {
                 $this->template->events = $events;

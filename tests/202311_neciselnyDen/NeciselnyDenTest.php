@@ -9,6 +9,7 @@
 require '../bootstrap.php';
 use Tester\Assert;
 use \App\Services\IcalParser;
+use \App\Services\IcalTools;
 
 class NeciselnyDenTest extends Tester\TestCase
 {
@@ -22,13 +23,7 @@ class NeciselnyDenTest extends Tester\TestCase
 		$events = $parser->parse( $dateFrom, $dateTo );
 		fclose($handle);
 
-		usort( $events, function($first,$second){
-			if( $first->getStart() < $second->getStart() ) return -1;
-			if( $first->getStart() > $second->getStart() ) return 1;
-			if( $first->getEnd() < $second->getEnd() ) return -1;
-			if( $first->getEnd() > $second->getEnd() ) return 1;
-			return 0;
-		});
+		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );
 
@@ -62,13 +57,7 @@ class NeciselnyDenTest extends Tester\TestCase
 		$events = $parser->parse( $dateFrom, $dateTo );
 		fclose($handle);
 
-		usort( $events, function($first,$second){
-			if( $first->getStart() < $second->getStart() ) return -1;
-			if( $first->getStart() > $second->getStart() ) return 1;
-			if( $first->getEnd() < $second->getEnd() ) return -1;
-			if( $first->getEnd() > $second->getEnd() ) return 1;
-			return 0;
-		});
+		$events = IcalTools::sortEvents( $events );
 
 		var_dump( $events );
 
