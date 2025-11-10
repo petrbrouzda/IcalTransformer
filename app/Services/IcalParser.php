@@ -111,7 +111,17 @@ class IcalParser
      */
     private function parseText( $line ) {
         $out = "";
+        // posuneme se na radce na konec prikazu
         $i = strlen($this->reader->command) + 1;
+        // ale ve skutecnosti hledame az dvojtecku za prikazem, coz muze byt hned, ale i pozdeji:
+        //  SUMMARY:O: Maďarsko
+        // ale i
+        //  SUMMARY;LANGUAGE=cs-CZ:O: Maďarsko
+        $dvojtecka = strpos( $line, ':', $i-1 );
+        if( $dvojtecka > 0 ) {
+            $i = $dvojtecka + 1;
+        }
+
         $isEscape = false;
         while($i<strlen($line)) {
             $c = substr( $line, $i, 1 );
@@ -141,7 +151,8 @@ class IcalParser
             $out = substr( $out, 0, $l-1 );
         }
 
-        // 'LANGUAGE=' 9 znaků
+        // 'LANGUAGE=' 9 
+        /*
         if( $l>10 ) {
             if( substr( $out, 0, 9 ) == 'LANGUAGE=' ) {
                 $pos = strpos( $out, ':', 9 );
@@ -150,6 +161,7 @@ class IcalParser
                 }
             }
         }
+        */
 
         return $out;
     }
