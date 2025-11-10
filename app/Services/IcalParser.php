@@ -151,18 +151,6 @@ class IcalParser
             $out = substr( $out, 0, $l-1 );
         }
 
-        // 'LANGUAGE=' 9 
-        /*
-        if( $l>10 ) {
-            if( substr( $out, 0, 9 ) == 'LANGUAGE=' ) {
-                $pos = strpos( $out, ':', 9 );
-                if( $pos>9 ) {
-                    $out = substr( $out, $pos+1 );
-                }
-            }
-        }
-        */
-
         return $out;
     }
 
