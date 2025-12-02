@@ -229,26 +229,54 @@ class IcalParser
         }
 
         // overit, ze je v danem case, zapsat do vystupniho pole
-        if( $event->isValid() ) {
-            if( $event->isRecurrent() ) {
-                // pro opakovane udalosti je vse slozitejsi
-                if( $event->isRecurrentInDateRange( $this->dateFrom, $this->dateToExclusive ) ) {
-                    //D/ Logger::log( 'app', Logger::TRACE, "recurrent udalost in range: {$event->getSummary()}" );  
-                    // tuto udalost primo do vystupu nevkladame, ale nechame ji udelat jeji jednotlive vyskyty
-                    $event->fillEventsInDateRanges( $this->dateFrom, $this->dateToExclusive, $this->events );
-                } else {
-                    //D/ Logger::log( 'app', Logger::TRACE, "recurrent udalost mimo range: {$event->getSummary()}" );    
+        $this->zpracujJednuUdalost( $event );
+    }
+
+
+    private function zpracujJednuUdalost( \App\Model\IcalEvent $event ) 
+    {
+        if( ! $event->isValid() ) {
+            //D/ Logger::log( 'app', Logger::TRACE, "udalost neni platna: {$event->getSummary()}" );    
+            return;
+        }
+
+        if( $event->hasRecurrenceId() ) {
+            // pokud ma udalost vyplnene RECURRENCE-ID, tak prepisuje jeden konkretni vyskyt udalosti se stejnym UID
+
+            //D/ Logger::log( 'app', Logger::TRACE, "  hledam udalost pro RecurrenceId [{$this->getRecurrenceId()}]" );    
+            // projit pole a najit udalosti se stejnym UID
+            foreach($this->events as $k => $val) { 
+                if( $val->getUid() === $event->getUid() ) {
+                // pokud maji konkretni zacatek = RECURRENCE-ID, tak z pole smazat
+                    //D/ Logger::log( 'app', Logger::TRACE, "  stejne UID: {$val}" );    
+                    if($val->getStart() == $event->getRecurrenceId() ) { 
+                        //D/ Logger::log( 'app', Logger::DEBUG, "-- udalost rusi starsi zaznam: {$val}" );    
+                        unset($this->events[$k]); 
+                    } 
                 }
+            } 
+
+        }
+
+        if( $event->isRecurrent() ) {
+            // pro opakovane udalosti je vse slozitejsi
+            if( $event->isRecurrentInDateRange( $this->dateFrom, $this->dateToExclusive ) ) {
+                //D/ Logger::log( 'app', Logger::TRACE, "recurrent udalost in range: {$event->getSummary()}" );  
+                // tuto udalost primo do vystupu nevkladame, ale nechame ji udelat jeji jednotlive vyskyty
+                $event->fillEventsInDateRanges( $this->dateFrom, $this->dateToExclusive, $this->events );
             } else {
-                // jednorazove udalosti jsou trivialni
-                if( $event->isInDateRange( $this->dateFrom, $this->dateToExclusive ) ) {
-                    //D/ Logger::log( 'app', Logger::TRACE, "udalost in range: {$event->getSummary()}" );    
-                    // nezapisuju primo do pole, aby se vyhodnotilo pripadne prepsani drivejsi udalosti
-                    $event->writeIntoArray( $this->events );
-                } else {
-                    //D/ Logger::log( 'app', Logger::TRACE, "udalost mimo range: {$event->getSummary()}" );    
-                }
+                //D/ Logger::log( 'app', Logger::TRACE, "recurrent udalost mimo range: {$event->getSummary()}" );    
             }
+            return;
+        } 
+                
+        // jednorazove udalosti jsou trivialni
+        if( $event->isInDateRange( $this->dateFrom, $this->dateToExclusive ) ) {
+            //D/ Logger::log( 'app', Logger::TRACE, "udalost in range: {$event->getSummary()}" );    
+            // nezapisuju primo do pole, aby se vyhodnotilo pripadne prepsani drivejsi udalosti
+            $event->writeIntoArray( $this->events );
+        } else {
+            //D/ Logger::log( 'app', Logger::TRACE, "udalost mimo range: {$event->getSummary()}" );    
         }
     }
 

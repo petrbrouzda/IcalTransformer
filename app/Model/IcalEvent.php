@@ -667,22 +667,6 @@ class IcalEvent
             }
         }
 
-        // pokud ma udalost vyplnene RECURRENCE-ID, tak prepisuje jeden konkretni vyskyt udalosti se stejnym UID
-        if( $this->hasRecurrenceId() ) {
-            //D/ Logger::log( 'app', Logger::TRACE, "  hledam udalost pro RecurrenceId [{$this->getRecurrenceId()}]" );    
-            // projit pole a najit udalosti se stejnym UID
-            foreach($events as $k => $val) { 
-                if( $val->getUid() === $this->getUid() ) {
-                // pokud maji konkretni zacatek = RECURRENCE-ID, tak z pole smazat
-                    //D/ Logger::log( 'app', Logger::TRACE, "  stejne UID: {$val}" );    
-                    if($val->getStart() == $this->getRecurrenceId() ) { 
-                        //D/ Logger::log( 'app', Logger::DEBUG, "-- udalost rusi starsi zaznam: {$val}" );    
-                        unset($events[$k]); 
-                    } 
-                }
-            } 
-        }
-
         //D/ Logger::log( 'app', Logger::DEBUG, "= zapsano: {$this}" );   
         $events[] = $this;
     }
