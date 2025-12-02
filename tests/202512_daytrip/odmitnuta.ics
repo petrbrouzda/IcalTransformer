@@ -1,0 +1,45 @@
+BEGIN:VCALENDAR
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Prague:20251201T153000
+DTEND;TZID=Europe/Prague:20251201T163000
+DTSTAMP:20251202T134035Z
+ORGANIZER;CN=karina.fidelman@daytrip.com:mailto:karina.fidelman@daytrip.com
+UID:3pg3l6gajc5ijia09v68ak425t_R20250623T133000@google.com
+ATTENDEE;CUTYPE=RESOURCE;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=MERIDA r
+ oom (4);X-NUM-GUESTS=0:mailto:c_1887j4fbf6l56j57jsjj0vo5k9q4g@resource.cale
+ ndar.google.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=tomasr
+ umian@daytrip.com;X-NUM-GUESTS=0:mailto:tomasrumian@daytrip.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=joy@da
+ ytrip.com;X-NUM-GUESTS=0:mailto:joy@daytrip.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED;CN=karina
+ .fidelman@daytrip.com;X-NUM-GUESTS=0:mailto:karina.fidelman@daytrip.com
+X-GOOGLE-CONFERENCE:https://meet.google.com/bpq-essn-uyj
+CREATED:20250603T122154Z
+DESCRIPTION: tahle schuzka projit NEMA
+LAST-MODIFIED:20251201T101653Z
+LOCATION:MERIDA room (4)
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:nema projit
+TRANSP:OPAQUE
+ATTACH;FILENAME=Notes - Day trips Discovery Weekly;FMTTYPE=application/vnd.
+ google-apps.document:https://docs.google.com/document/d/xxxxx
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Prague:20251201T163000
+DTEND;TZID=Europe/Prague:20251201T173000
+DTSTAMP:20251202T134035Z
+ORGANIZER;CN=karina.fidelman@daytrip.com:mailto:karina.fidelman@daytrip.com
+UID:3pg3laaaac5ijia09v68ak425t_R20250623T133000@google.com
+X-GOOGLE-CONFERENCE:https://meet.google.com/bpq-essn-uyj
+CREATED:20250603T122154Z
+DESCRIPTION: tahle schuzka ma projit
+LAST-MODIFIED:20251201T101653Z
+LOCATION:MERIDA room (4)
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ma projit
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR

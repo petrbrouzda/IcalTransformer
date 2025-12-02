@@ -18,8 +18,6 @@ class DaytripTest extends Tester\TestCase
 {
 	public function testPresunutePosledniSchuzky()
 	{
-		// Logger::log( 'app', Logger::DEBUG , "testEnddate()" ); 
-
 		$dateFrom = Nette\Utils\DateTime::from('2025-12-02');
 		$dateTo = Nette\Utils\DateTime::from('2025-12-03');
 		
@@ -37,6 +35,7 @@ class DaytripTest extends Tester\TestCase
 		Assert::equal( count($events), 0 );
 
 	}
+
 
 }
 

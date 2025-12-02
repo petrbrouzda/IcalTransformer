@@ -69,6 +69,8 @@ class IcalEvent
     /** timestamp udalosti, kterou nahrazuje */
     private $recurrenceId;
 
+    private $requiredAttendeeDeclined = false;
+
     public function __toString() {
         return "IcalEvent from:[{$this->dtstart}] to:[{$this->dtend}] summary:[{$this->summary}] [{$this->uid}]";
     }
@@ -95,6 +97,7 @@ class IcalEvent
 
     public function isValid() {
         if( $this->dtstart==null ) return false;
+        if( $this->requiredAttendeeDeclined ) return false;
         return true;
     }
 
@@ -645,9 +648,9 @@ class IcalEvent
                 //D/ Logger::log( 'app', Logger::TRACE, "vygenerovano {$ctEvents} udalosti do [{$to}] resp [{$untilDate}], koncim" );    
                 break;
             }
-        }
-        
+        } 
     }
+
 
 
     /**
@@ -1057,6 +1060,37 @@ class IcalEvent
             }
         }
     }
+
+
+    /* 
+    ATTENDEE;CUTYPE=RESOURCE;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=MERIDA r
+    oom (4);X-NUM-GUESTS=0:mailto:c_1887j4fbf6l56j57jsjj0vo5k9q4g@resource.cale
+    ndar.google.com
+    ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=tomasr
+    umian@daytrip.com;X-NUM-GUESTS=0:mailto:tomasrumian@daytrip.com
+    ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=joy@da
+    ytrip.com;X-NUM-GUESTS=0:mailto:joy@daytrip.com
+    ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED;CN=karina
+    .fidelman@daytrip.com;X-NUM-GUESTS=0:mailto:karina.fidelman@daytrip.com
+    */
+    public function setAttendeeInfo( $commandAttributes, $parameter )
+    {
+        $isReqParticipant = false;
+        $partstatDeclined = false;
+        foreach ($commandAttributes as $attr) {
+            Logger::log( 'app', Logger::DEBUG, " - {$attr->key} = {$attr->value}" );    
+            if( $attr->key=='ROLE' && $attr->value=='REQ-PARTICIPANT' ) {
+                $isReqParticipant = true;
+            }
+            if( $attr->key=='PARTSTAT' && $attr->value=='DECLINED' ) {
+                $partstatDeclined = true;
+            }
+        }
+        if( $isReqParticipant && $partstatDeclined ) {
+            $this->requiredAttendeeDeclined = true;
+        }
+    }
+
 
     /*
     RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20231101T225959Z;BYDAY=WE

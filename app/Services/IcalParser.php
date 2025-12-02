@@ -226,6 +226,10 @@ class IcalParser
                 $this->parse1a( $line );
                 $event->setRecurrenceId( $this->commandAttributes, $this->parameter );
             }
+            if( $this->reader->command==="ATTENDEE" ) {
+                $this->parse1a( $line );
+                $event->setAttendeeInfo( $this->commandAttributes, $this->parameter );
+            }
         }
 
         // overit, ze je v danem case, zapsat do vystupniho pole
