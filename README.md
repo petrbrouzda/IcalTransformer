@@ -10,6 +10,14 @@ Stejně tak si kešuje i další zpracování dokumentu.
 I pokud budete zasílat požadavky opakovaně častěji, k výpočtům dojde jen jednou za hodinu.
 
 ---
+# Změny v aplikaci
+
+## 2025-12-03
+1) Pokud má schůzka **povinné** účastníky a některý z nich **odmítne**, vychází se z toho, že schůzka se nekoná = nebude zobrazena v kalendáři.
+2) Oprava chyby: Pokud je schůzka nastavena jako opakovaná, a jeden výskyt (plánovaný na datum X) je přesunut na dřívější datum (např X-2), pak při zobrazení kalendáře od data X byla zobrazena schůzka **nepřesunutá**.
+
+
+---
 # Volání a parametry
 
 Stránka pro podání JSON dat sedí na adrese https://vas-server/IcalTransformer/ical/data
